@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from django.urls import reverse
 
 
 class Country(models.Model):
@@ -27,6 +28,12 @@ class Community(models.Model):
         self.slug = slugify(self.communityname)
         super(Community, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('community_detail', kwargs={'slug': self.slug})
+
 
 class Membership(models.Model):
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
@@ -50,6 +57,12 @@ class Account(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.user.username)
         super(Account, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.name} {self.surname}'
+
+    def get_absolute_url(self):
+        return reverse('account_detail', kwargs={'slug': self.slug})
 
 
 class Photo(models.Model):

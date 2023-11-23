@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Title{% endblock title %}</title>
+</head>
+<body>
+
+    <header>
+        {% block head %}
+            <ul>
+                <li>СОЦСЕТЬ</li>
+                <li>люди</li>
+                <li>сообщества</li>
+                <li>выйти</li>
+            </ul>
+        {% endblock head %}
+    </header>
+
+    {% block main %}
+        <main>
+        </main>
+    {% endblock main %}
+
+    <footer>Андрей Королёв, 2023г.</footer>
+
+</body>
+</html>
