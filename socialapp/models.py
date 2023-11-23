@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.text import slugify
 
 
 class Country(models.Model):
@@ -20,6 +21,11 @@ class Community(models.Model):
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Город')
     creationdate = models.DateField(verbose_name='Дата создания')
     members = models.ManyToManyField(User, through='Membership', through_fields=('community', 'user'))
+    slug = models.SlugField(unique=True, default=None, verbose_name='URL')
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.communityname)
+        super(Community, self).save(*args, **kwargs)
 
 
 class Membership(models.Model):
@@ -39,6 +45,11 @@ class Account(models.Model):
     avatar = models.CharField(max_length=500, null=True, blank=True, verbose_name='Аватар')
     bio = models.TextField(max_length=500, null=True, blank=True, verbose_name='Информация')
     following = models.ManyToManyField('self', related_name='followers', symmetrical=False, blank=True, verbose_name='Подписки')
+    slug = models.SlugField(unique=True, default=None, verbose_name='URL')
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.user.username)
+        super(Account, self).save(*args, **kwargs)
 
 
 class Photo(models.Model):
