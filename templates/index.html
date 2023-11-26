@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Соцсеть{% endblock title %}
+{% block content %}
+    <div class="center-div center-text">
+        <h1>Добро пожаловать в Соцсеть</h1>
+        <h2>{{ username }}</h2>
+
+        <form action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <th>{{ form.username.label_tag }}</th>
+                    <td>{{ form.username }}</td>
+                </tr>
+                <tr>
+                    <th>{{ form.password.label_tag }}</th>
+                    <td>{{ form.password }}</td>
+                </tr>
+{#                <tr>#}
+{#                    <td><a href="{% url 'password_reset' %}">Восстановить пароль</a></td>#}
+{#                </tr>#}
+            </table>
+            <input type="submit" value="Вход">
+        </form>
+
+        <h2>
+            Ещё не с нами? <a href="{% url 'registration' %}">Зарегистрируйтесь</a>
+        </h2>
+    </div>
+{% endblock content %}

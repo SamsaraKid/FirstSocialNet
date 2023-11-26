@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.urls import reverse
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Country(models.Model):
@@ -41,7 +43,7 @@ class Membership(models.Model):
     role = models.IntegerField(verbose_name='Роль участника в сообществе (0 - участник, 1 - администратор)')
 
 
-class Account(models.Model):
+class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, verbose_name='Имя')
     surname = models.CharField(max_length=100, verbose_name='Фамилия')
@@ -56,13 +58,24 @@ class Account(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.user.username)
-        super(Account, self).save(*args, **kwargs)
+        super(Profile, self).save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.name} {self.surname}'
 
     def get_absolute_url(self):
-        return reverse('account_detail', kwargs={'slug': self.slug})
+        return reverse('profile', kwargs={'slug': self.slug})
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
 
 
 class Photo(models.Model):

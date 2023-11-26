@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Title{% endblock title %}</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
 </head>
 <body>
 
@@ -12,15 +14,17 @@
                 <li>СОЦСЕТЬ</li>
                 <li>люди</li>
                 <li>сообщества</li>
-                <li>выйти</li>
+                <li><a href="{% url 'logout' %}">выйти</a></li>
             </ul>
         {% endblock head %}
     </header>
 
-    {% block main %}
-        <main>
-        </main>
-    {% endblock main %}
+    {% block content %}
+        {% block menu %}
+        {% endblock menu %}
+        {% block main %}
+        {% endblock main %}
+    {% endblock content %}
 
     <footer>Андрей Королёв, 2023г.</footer>
 

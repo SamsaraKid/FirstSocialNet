@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="center-div center-text">
+        <h2>Регистрация</h2>
+        <form action="" method="post">
+            {% csrf_token %}
+            <table>
+                {% for i in userform %}
+                    <tr>
+                        <th>{{ i.label_tag }}</th>
+                        <td>{{ i }}</td>
+                        <td>{{ i.errors }}</td>
+                    </tr>
+                {% endfor %}
+                {% for i in profileform %}
+                    <tr>
+                        <th>{{ i.label_tag }}</th>
+                        <td>{{ i }}</td>
+                        <td>{{ i.errors }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <input type="submit" value="Отправить">
+        </form>
+    </div>
+{% endblock content %}
