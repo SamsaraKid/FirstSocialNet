@@ -18,33 +18,42 @@ def index(req):
     return render(req, 'index.html', context=data)
 
 
+# def registration(req):
+#     if req.POST:
+#         userform = UserForm(req.POST)
+#         profileform = ProfileForm(req.POST)
+#         if userform.is_valid() and profileform.is_valid():
+#             user = userform.save()
+#             user.set_password(user.password)
+#             user.save()
+#             login(req, user)
+#             profile = Profile.objects.get(user=user)
+#             profile.name = profileform.cleaned_data.get('name')
+#             profile.surname = profileform.cleaned_data.get('surname')
+#             profile.save()
+#             return HttpResponseRedirect(reverse('profile', args=[req.user.profile.slug]))
+#     else:
+#         userform = UserForm()
+#         profileform = ProfileForm()
+#     data = {'userform': userform, 'profileform': profileform}
+#     return render(req, 'registration/registration.html', context=data)
+
+
 def registration(req):
     if req.POST:
-        userform = UserForm(req.POST)
-        profileform = ProfileForm(req.POST)
-        if userform.is_valid() and profileform.is_valid():
+        userform = SignUp(req.POST)
+        if userform.is_valid():
             user = userform.save()
-            user.set_password(user.password)
             user.save()
-            profile = Profile.objects.get(user=user)
-            print(profileform.cleaned_data.get('name'))
-            print(Profile.objects.get(user=user).user.username, Profile.objects.get(user=user).name)
-            profile.name = profileform.cleaned_data.get('name')
-            print(profile.name)
-            print(Profile.objects.get(user=user).user.username, Profile.objects.get(user=user).name)
-            profile.surname = profileform.cleaned_data.get('surname')
-            profile.save()
-            user.save()
-            print(profile.name)
-            print(Profile.objects.get(user=user).user.username, Profile.objects.get(user=user).name)
             login(req, user)
-            print(profile.name)
-            print(Profile.objects.get(user=user).user.username, Profile.objects.get(user=user).name)
+            profile = Profile.objects.get(user=user)
+            profile.name = userform.cleaned_data.get('name')
+            profile.surname = userform.cleaned_data.get('surname')
+            profile.save()
             return HttpResponseRedirect(reverse('profile', args=[req.user.profile.slug]))
     else:
-        userform = UserForm()
-        profileform = ProfileForm()
-    data = {'userform': userform, 'profileform': profileform}
+        userform = SignUp()
+    data = {'userform': userform}
     return render(req, 'registration/registration.html', context=data)
 
 

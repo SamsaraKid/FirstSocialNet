@@ -13,13 +13,6 @@
                         <td>{{ i.errors }}</td>
                     </tr>
                 {% endfor %}
-                {% for i in profileform %}
-                    <tr>
-                        <th>{{ i.label_tag }}</th>
-                        <td>{{ i }}</td>
-                        <td>{{ i.errors }}</td>
-                    </tr>
-                {% endfor %}
             </table>
             <input type="submit" value="Отправить">
         </form>
