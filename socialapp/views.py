@@ -10,8 +10,7 @@ from django.contrib.auth.decorators import login_required
 
 def index(req):
     if req.user.username:
-        username = req.user.username
-        print('имя', req.user.profile.name)
+        return redirect('profile', req.user.profile.slug)
     else:
         username = 'Guest'
     data = {'username': username, 'form': LogInForm()}
@@ -70,5 +69,8 @@ def afterlogin(req):
 class ProfileDetail(generic.DetailView):
     model = Profile
     slug_url_kwarg = 'slug'
+
+
+
 
 
