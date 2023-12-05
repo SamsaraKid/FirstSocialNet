@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="center-div center-text">
-        <h2>Регистрация</h2>
-        <form action="" method="post">
+    <div class="ma tc card-simple w500">
+        <h2 class="mb15">Регистрация</h2>
+        <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <table>
+            <table class="ma mb15">
                 {% for i in userform %}
                     <tr>
                         <th>{{ i.label_tag }}</th>

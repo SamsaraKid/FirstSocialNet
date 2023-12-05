@@ -4,6 +4,11 @@ from django.utils.text import slugify
 from django.urls import reverse
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import os
+
+
+def avatar_upload_to(instance, filename):
+    return os.path.join(os.path.join(instance.user.username, 'avatar'), instance.user.username + os.path.splitext(filename)[1])
 
 
 class Country(models.Model):
@@ -51,7 +56,8 @@ class Profile(models.Model):
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Страна')
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Город')
     birthdate = models.DateField(null=True, blank=True, verbose_name='Дата рождения')
-    avatar = models.CharField(max_length=500, null=True, blank=True, verbose_name='Аватар')
+    avatar = models.ImageField(upload_to=avatar_upload_to, null=True, blank=True, verbose_name='Аватар')
+    # avatar = models.CharField(max_length=500, null=True, blank=True, verbose_name='Аватар')
     bio = models.TextField(max_length=500, null=True, blank=True, verbose_name='Информация')
     following = models.ManyToManyField('self', related_name='followers', symmetrical=False, blank=True, verbose_name='Подписки')
     slug = models.SlugField(unique=True, default=None, verbose_name='URL')

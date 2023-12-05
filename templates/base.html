@@ -9,14 +9,16 @@
 <body>
 
     <header>
-        {% block head %}
-            <ul>
-                <li>СОЦСЕТЬ</li>
-                <li>люди</li>
-                <li>сообщества</li>
-                <li><a href="{% url 'logout' %}">выйти</a></li>
+        <div class="cw ma">{% block head %}
+            <ul class="fr">
+                <li><h2>СОЦСЕТЬ</h2></li>
+                {% if user.username %}
+                    <li>люди</li>
+                    <li>сообщества</li>
+                    <li><a href="{% url 'logout' %}">выйти</a></li>
+                {% endif %}
             </ul>
-        {% endblock head %}
+        {% endblock head %}</div>
     </header>
 
     {% block content %}
@@ -26,7 +28,7 @@
         {% endblock main %}
     {% endblock content %}
 
-    <footer>Андрей Королёв, 2023г.</footer>
+    <footer class="ma tc card-simple w350">Андрей Королёв © 2023</footer>
 
 </body>
 </html>
