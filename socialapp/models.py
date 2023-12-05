@@ -14,10 +14,16 @@ def avatar_upload_to(instance, filename):
 class Country(models.Model):
     name = models.CharField(max_length=100, verbose_name='Страна')
 
+    def __str__(self):
+        return f'{self.name}'
+
 
 class City(models.Model):
     name = models.CharField(max_length=100, verbose_name='Город')
     country = models.ForeignKey(Country, on_delete=models.CASCADE, verbose_name='Страна')
+
+    def __str__(self):
+        return f'{self.name}, {self.country.name}'
 
 
 class Community(models.Model):
