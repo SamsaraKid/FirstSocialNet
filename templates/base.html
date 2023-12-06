@@ -11,7 +11,7 @@
     <header>
         <div class="cw ma">{% block head %}
             <ul class="fr">
-                <li><h2>СОЦСЕТЬ</h2></li>
+                <li><a href="{% url 'home' %}" class="link-clean"><h2>СОЦСЕТЬ</h2></a></li>
                 {% if user.username %}
                     <li>люди</li>
                     <li>сообщества</li>
