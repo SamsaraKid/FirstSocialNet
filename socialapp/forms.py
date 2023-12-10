@@ -5,6 +5,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import *
 from django.utils.translation import gettext_lazy as _
+from django.contrib.admin.widgets import AutocompleteSelect
+from django.contrib import admin
 
 months = {
     1: _("Январь"),
@@ -26,24 +28,34 @@ years = range(this_year, this_year - 100, -1)
 
 
 class LogInForm(forms.Form):
-    username = forms.CharField(label='Имя пользователя', help_text='', widget=forms.TextInput(attrs={'placeholder': 'Имя пользователя'}))
-    password = forms.CharField(label='Пароль', help_text='', widget=forms.PasswordInput(attrs={'placeholder': 'Пароль'}))
+    username = forms.CharField(label='Имя пользователя', help_text='',
+                               widget=forms.TextInput(attrs={'placeholder': 'Имя пользователя'}))
+    password = forms.CharField(label='Пароль', help_text='',
+                               widget=forms.PasswordInput(attrs={'placeholder': 'Пароль'}))
 
 
 class SignUp(UserCreationForm):
-    username = forms.CharField(label='Имя пользователя', help_text='')
+    username = forms.CharField(label='Имя пользователя', help_text='',
+                               widget=forms.TextInput(attrs={'placeholder': 'Никнейм в адресной строке'}))
     password1 = forms.CharField(label='Пароль', help_text='',
                                 widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}))
     password2 = forms.CharField(label='Подтверждение пароля', help_text='',
                                 widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}))
     email = forms.EmailField(label='Почта', widget=forms.TextInput(attrs={'placeholder': 'name@mail.com'}))
-    name = forms.CharField(label='Имя', help_text='')
-    surname = forms.CharField(label='Фамилия', help_text='')
-    secondname = forms.CharField(label='Отчество', help_text='', required=False)
+    name = forms.CharField(label='Имя', help_text='',
+                               widget=forms.TextInput(attrs={'placeholder': 'Имя'}))
+    surname = forms.CharField(label='Фамилия', help_text='',
+                               widget=forms.TextInput(attrs={'placeholder': 'Фамилия'}))
+    secondname = forms.CharField(label='Отчество', help_text='', required=False,
+                               widget=forms.TextInput(attrs={'placeholder': 'Отчество'}))
     birthdate = forms.DateField(label='Дата рождения',
                                 widget=forms.SelectDateWidget(months=months,
                                                               years=years))
-    city = forms.ModelChoiceField(label='Город', queryset=City.objects.all())
+    city = forms.ModelChoiceField(label='Город', queryset=City.objects.all().order_by('name'), required=False)
+    country = forms.ModelChoiceField(label='Страна', queryset=Country.objects.all().order_by('name'), required=False)
+    city_custom = forms.CharField(label='Название', max_length=50, required=False)
+    bio = forms.CharField(label='Информация о вас', max_length=500, required=False,
+                          widget=forms.Textarea(attrs={'placeholder': 'Максимум 500 знаков'}))
 
     avatar = forms.ImageField(label='Аватар')
 

@@ -23,7 +23,7 @@ header{
     background-color: #1f1f1f;
 }
 
-input[type=text], input[type=password]{
+input[type=text], input[type=password], textarea{
     font-family: inherit;
     font-size: inherit;
     line-height: inherit;
@@ -38,7 +38,13 @@ input[type=text], input[type=password]{
     text-align: center;
 }
 
-input[type=text]:focus, input[type=password]:focus{
+textarea{
+    height: 250px;
+    text-align: left;
+    resize: none;
+}
+
+input[type=text]:focus, input[type=password]:focus, textarea:focus{
     outline: 0;
     border: 1px solid cornflowerblue;
 }
@@ -67,7 +73,18 @@ input[type=file]{
     /*color: white;*/
     /*background-color: black;*/
     display: inline-block;
+    width: 250px;
+    text-align: left;
 }
+
+#id_birthdate_month{
+    width: 50%;}
+#id_birthdate_day{
+    width: 20%;}
+#id_birthdate_year{
+    width: 30%;}
+#id_city, #id_country{
+    width: 100%;}
 
 .card-simple{
     background-color: #1f1f1f;
