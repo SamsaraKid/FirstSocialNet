@@ -1,3 +1,4 @@
+from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from .models import *
 from .forms import *
@@ -11,10 +12,24 @@ from django.contrib.auth.decorators import login_required
 def index(req):
     if req.user.username:
         return HttpResponseRedirect(reverse('profile', args=[req.user.profile.slug]))
+    if req.method == 'POST':
+        form = AuthenticationForm(req, data=req.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(req, user)
+            return redirect('home')
     else:
-        username = 'Guest'
-    data = {'username': username, 'form': LogInForm()}
-    return render(req, 'index.html', context=data)
+        form = AuthenticationForm()
+    return render(req, 'index.html', {'form': form})
+    # if req.user.username:
+    #     return HttpResponseRedirect(reverse('profile', args=[req.user.profile.slug]))
+    # else:
+    #     username = 'Guest'
+    # data = {'username': username, 'form': LogInForm()}
+    # return render(req, 'index.html', context=data)
 
 
 # def registration(req):
@@ -49,6 +64,16 @@ def registration(req):
             profile = Profile.objects.get(user=user)
             profile.name = userform.cleaned_data.get('name')
             profile.surname = userform.cleaned_data.get('surname')
+            profile.secondname = userform.cleaned_data.get('secondname')
+            profile.birthdate = userform.cleaned_data.get('birthdate')
+            if userform.cleaned_data.get('city_custom'):
+                new_city = City.objects.create(country=userform.cleaned_data.get('country'),
+                                               name=userform.cleaned_data.get('city_custom'),
+                                               add_by_user=True)
+                profile.city = new_city
+            else:
+                profile.city = userform.cleaned_data.get('city')
+            profile.bio = userform.cleaned_data.get('bio')
             profile.avatar = userform.cleaned_data.get('avatar')
             profile.save()
             return HttpResponseRedirect(reverse('profile', args=[req.user.profile.slug]))

@@ -21,6 +21,7 @@ class Country(models.Model):
 class City(models.Model):
     name = models.CharField(max_length=100, verbose_name='Город')
     country = models.ForeignKey(Country, on_delete=models.CASCADE, verbose_name='Страна')
+    add_by_user = models.BooleanField(verbose_name='Добавлен пользователем', default=False)
 
     def __str__(self):
         return f'{self.name}, {self.country.name}'
@@ -59,7 +60,6 @@ class Profile(models.Model):
     name = models.CharField(max_length=100, verbose_name='Имя')
     surname = models.CharField(max_length=100, verbose_name='Фамилия')
     secondname = models.CharField(max_length=100, null=True, blank=True, verbose_name='Отчество')
-    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Страна')
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Город')
     birthdate = models.DateField(null=True, blank=True, verbose_name='Дата рождения')
     avatar = models.ImageField(upload_to=avatar_upload_to, null=True, blank=True, verbose_name='Аватар')

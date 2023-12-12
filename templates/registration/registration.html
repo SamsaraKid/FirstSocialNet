@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Регистрация{% endblock title %}
+{% block script %}<script src="{% static 'js/registration.js' %}" defer></script>{% endblock script %}
 
 {% block content %}
     <div class="ma tc card-simple w500">
@@ -6,13 +10,27 @@
         <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <table class="ma mb15">
-                {% for i in userform %}
-                    <tr>
-                        <th>{{ i.label_tag }}</th>
-                        <td>{{ i }}</td>
-                        <td>{{ i.errors }}</td>
-                    </tr>
-                {% endfor %}
+                <tr><th>{{ userform.username.label_tag }}</th><td>{{ userform.username }}</td></tr>
+                <tr><th>{{ userform.password1.label_tag }}</th><td>{{ userform.password1 }}</td></tr>
+                <tr><th>{{ userform.password2.label_tag }}</th><td>{{ userform.password2 }}</td></tr>
+                <tr><th>{{ userform.email.label_tag }}</th><td>{{ userform.email }}</td></tr>
+                <tr><th>{{ userform.name.label_tag }}</th><td>{{ userform.name }}</td></tr>
+                <tr><th>{{ userform.surname.label_tag }}</th><td>{{ userform.surname }}</td></tr>
+                <tr><th>{{ userform.secondname.label_tag }}</th><td>{{ userform.secondname }}</td></tr>
+                <tr><th>{{ userform.birthdate.label_tag }}</th><td>{{ userform.birthdate }}</td></tr>
+                <tr id="id_city_tr"><th>{{ userform.city.label_tag }}</th><td>{{ userform.city }}</td></tr>
+                <tr><th>Не нашли свой город?</th><td><button type="button" id="add_new_city">Добавить новый город</button></td></tr>
+                <tr id="id_country_tr" hidden><th>{{ userform.country.label_tag }}</th><td>{{ userform.country }}</td></tr>
+                <tr id="id_city_custom_tr" hidden><th>{{ userform.city_custom.label_tag }}</th><td>{{ userform.city_custom }}</td></tr>
+                <tr><th>{{ userform.bio.label_tag }}</th><td>{{ userform.bio }}</td></tr>
+                <tr><th>{{ userform.avatar.label_tag }}</th><td>{{ userform.avatar }}</td></tr>
+{#                {% for i in userform %}#}
+{#                    <tr>#}
+{#                        <th>{{ i.label_tag }}</th>#}
+{#                        <td>{{ i }}</td>#}
+{#                        <td>{{ i.errors }}</td>#}
+{#                    </tr>#}
+{#                {% endfor %}#}
             </table>
             <input type="submit" value="Отправить">
         </form>
