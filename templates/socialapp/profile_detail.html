@@ -1,7 +1,21 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}{{ profile.name }} {{ profile.surname }}{% endblock title %}
 {% block content %}
-    <div class="center-div center-text">
+    <div class="center-width margin-auto flex-row">
+        <div class="menu-left">
+            <ul>
+                <li><a class="link-clean" href="">Моя страница</a></li>
+                <li><a class="link-clean" href="">Мои друзья</a></li>
+                <li><a class="link-clean" href="">Мои сообщества</a></li>
+                <li><a class="link-clean" href="">Мои фото</a></li>
+            </ul>
+        </div>
+        <div class="profile">
+            <div class="avatar"><img src="{{ profile.avatar.url }}" alt="avatar"></div>
+        </div>
+
+
         <h2>{{ profile.user.username }}</h2>
         <h2>{{ profile.name }}</h2>
         <h2>{{ profile.surname }}</h2>

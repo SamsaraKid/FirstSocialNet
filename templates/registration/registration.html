@@ -5,11 +5,11 @@
 {% block script %}<script src="{% static 'js/registration.js' %}" defer></script>{% endblock script %}
 
 {% block content %}
-    <div class="ma tc card-simple w500">
-        <h2 class="mb15">Регистрация</h2>
+    <div class="margin-auto text-center card-simple w500">
+        <h2 class="margin-bottom15">Регистрация</h2>
         <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <table class="ma mb15">
+            <table class="margin-auto margin-bottom15">
                 <tr><th>{{ userform.username.label_tag }}</th><td>{{ userform.username }}</td></tr>
                 <tr><th>{{ userform.password1.label_tag }}</th><td>{{ userform.password1 }}</td></tr>
                 <tr><th>{{ userform.password2.label_tag }}</th><td>{{ userform.password2 }}</td></tr>

@@ -11,8 +11,8 @@
 <body>
 
     <header>
-        <div class="cw ma">{% block head %}
-            <ul class="fr">
+        <div class="center-width margin-auto">{% block head %}
+            <ul class="flex-row">
                 <li><a href="{% url 'home' %}" class="link-clean"><h2>СОЦСЕТЬ</h2></a></li>
                 {% if user.username %}
                     <li>люди</li>
@@ -30,7 +30,7 @@
         {% endblock main %}
     {% endblock content %}
 
-    <footer class="ma tc card-simple w350">Андрей Королёв © 2023</footer>
+    <footer class="margin-auto text-center card-simple w350">Андрей Королёв © 2023</footer>
 
 </body>
 </html>
