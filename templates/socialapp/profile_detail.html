@@ -11,13 +11,20 @@
                 <li><a class="link-clean" href="">Мои фото</a></li>
             </ul>
         </div>
-        <div class="profile">
+
+
+        <div class="profile flex-row">
             <div class="avatar"><img src="{{ profile.avatar.url }}" alt="avatar"></div>
+            <table>
+                <tr><td><h2>{{ profile.name }} {{ profile.surname }}</h2></td></tr>
+                <tr><td><h3>{{ profile.user.username }}</h3></td></tr>
+                <tr><th>Город:</th><td>{{ profile.city }}</td></tr>
+            </table>
         </div>
 
 
-        <h2>{{ profile.user.username }}</h2>
-        <h2>{{ profile.name }}</h2>
-        <h2>{{ profile.surname }}</h2>
+
+
+
     </div>
 {% endblock content %}
