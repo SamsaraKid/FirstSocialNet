@@ -7,6 +7,7 @@ from .models import *
 from django.utils.translation import gettext_lazy as _
 from django.contrib.admin.widgets import AutocompleteSelect
 from django.contrib import admin
+from django.contrib.auth.forms import AuthenticationForm
 
 
 months = {

@@ -132,11 +132,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'home'#'afterlogin'
 LOGOUT_REDIRECT_URL = 'home'
 
-
+email_host_passw = open('socialapp/static/keys/gmail', 'r', encoding='utf-8').readline()
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = 'koanyur@gmail.com'
-EMAIL_HOST_PASSWORD = 'smon akrs ymon gucn'
+EMAIL_HOST_PASSWORD = email_host_passw
