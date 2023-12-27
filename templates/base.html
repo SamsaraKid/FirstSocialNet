@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <title>{% block title %}Title{% endblock title %}</title>
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% block css %}
+    {% endblock css %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     {% block script %}<script></script>{% endblock script %}
 </head>
@@ -12,12 +14,12 @@
 
     <header>
         <div class="center-width margin-auto">{% block head %}
-            <ul class="flex-row align-items-center">
+            <ul class="flex-row align-items-center just-cont-spa-bet">
                 <li><a href="{% url 'home' %}" class="link-clean"><h2>СОЦСЕТЬ</h2></a></li>
                 {% if user.username %}
-                    <li>люди</li>
-                    <li>сообщества</li>
-                    <li><a href="{% url 'logout' %}">выйти</a></li>
+                    <li><a href="{% url 'home' %}" class="link-clean"><p>люди</p></a></li>
+                    <li><a href="{% url 'home' %}" class="link-clean"><p>сообщества</p></a></li>
+                    <li><a href="{% url 'logout' %}" class="link-clean"><p>выйти</p></a></li>
                 {% endif %}
             </ul>
         {% endblock head %}</div>

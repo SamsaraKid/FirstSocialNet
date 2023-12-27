@@ -1,25 +1,36 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}{{ profile.name }} {{ profile.surname }}{% endblock title %}
+{% block css %}<link rel="stylesheet" href="{% static 'css/profile.css' %}">{% endblock css %}
 {% block content %}
     <div class="center-width margin-auto flex-row">
+
         <div class="menu-left">
             <ul>
                 <li><a class="link-clean" href="">Моя страница</a></li>
-                <li><a class="link-clean" href="">Мои друзья</a></li>
+                <li><a class="link-clean" href="">Мои подписки</a></li>
                 <li><a class="link-clean" href="">Мои сообщества</a></li>
                 <li><a class="link-clean" href="">Мои фото</a></li>
             </ul>
         </div>
 
+        <div class="main-div flex-row line-under">
 
-        <div class="profile flex-row">
-            <div class="avatar"><img src="{{ profile.avatar.url }}" alt="avatar"></div>
-            <table>
-                <tr><td><h2>{{ profile.name }} {{ profile.surname }}</h2></td></tr>
-                <tr><td><h3>{{ profile.user.username }}</h3></td></tr>
-                <tr><th>Город:</th><td>{{ profile.city }}</td></tr>
-            </table>
+            <div class="profile-left-div">
+                <div class="avatar"><img src="{{ profile.avatar.url }}" alt="avatar"></div>
+                <a href="{% url 'home' %}"><button class="button-100perc">Подписаться</button></a>
+            </div>
+
+            <div class="profile-right-div">
+                <table>
+                    <tr><th colspan="2"><h3>{{ profile.name }} {{ profile.secondname }} {{ profile.surname }}</h3></th></tr>
+                    <tr class="line-under"><td colspan="2"><h3>{{ profile.user.username }}</h3></td></tr>
+                    <tr><th>Город:</th><td>{{ profile.city }}</td></tr>
+                    <tr><th>Дата рождения:</th><td>{{ profile.birthdate }}</td></tr>
+                    <tr><th>Информация:</th><td>{{ profile.bio }}</td></tr>
+                </table>
+            </div>
+
         </div>
 
 
