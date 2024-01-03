@@ -7,6 +7,9 @@ from django.views import generic
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 
 
 def index(req):
@@ -93,8 +96,37 @@ def afterlogin(req):
 #     return render(req, 'socialapp/profile_detail.html', context={'profile': profile})
 
 
-class ProfileDetail(generic.DetailView):
-    model = Profile
-    slug_url_kwarg = 'slug'
+# # class ProfileDetail(generic.DetailView):
+#     model = Profile
+#     slug_url_kwarg = 'slug'
 
 
+def profiledetail(req, slug):
+    profile = Profile.objects.get(slug=slug)
+    subscribtion = profile in req.user.profile.following.all()
+    print(subscribtion)
+    return render(req, 'socialapp/profile_detail.html', context={'profile': profile, 'subscribtion': subscribtion})
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+def subscribe(req):
+    if req.POST:
+        user_id = req.POST.get('user_id')
+        profile_id = req.POST.get('profile_id')
+        user = Profile.objects.get(user_id=user_id)
+        profile = Profile.objects.get(user_id=profile_id)
+        user.following.add(profile)
+        print('Подписка оформлена')
+        return JsonResponse({'mes': 'Подписка оформлена', 'link': ''})
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+def unsubscribe(req):
+    if req.POST:
+        user_id = req.POST.get('user_id')
+        profile_id = req.POST.get('profile_id')
+        user = Profile.objects.get(user_id=user_id)
+        profile = Profile.objects.get(user_id=profile_id)
+        user.following.remove(profile)
+        print('Подписка отменена')
+        return JsonResponse({'mes': 'Подписка отменена', 'link': ''})

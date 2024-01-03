@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}{{ profile.name }} {{ profile.surname }}{% endblock title %}
-{% block css %}<link rel="stylesheet" href="{% static 'css/profile.css' %}">{% endblock css %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock css %}
+{% block script %}
+    <script src="{% static 'js/subscribe.js' %}" defer></script>
+{% endblock script %}
+
 {% block content %}
     <div class="center-width margin-auto flex-row">
 
@@ -18,7 +24,15 @@
 
             <div class="profile-left-div">
                 <div class="avatar"><img src="{{ profile.avatar.url }}" alt="avatar"></div>
-                <a href="{% url 'home' %}"><button class="button-100perc">Подписаться</button></a>
+                {% if user.id != profile.user_id %}
+                    {% if subscribtion %}
+                        <button class="button-100perc" id="unsubscribe-button">Отписаться</button>
+                    {% else %}
+                        <button class="button-100perc" id="subscribe-button">Подписаться</button>
+                    {% endif %}
+                    <div id="user_id" hidden>{{ user.id }}</div>
+                    <div id="profile_id" hidden>{{ profile.user_id }}</div>
+                {% endif %}
             </div>
 
             <div class="profile-right-div">
