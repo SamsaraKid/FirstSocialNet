@@ -103,7 +103,7 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
     community = models.ForeignKey(Community, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Размещено в сообществе')
     photo = models.ManyToManyField(Photo, verbose_name='Прикреплённые фото')
-    creationdate = models.DateTimeField(verbose_name='Дата создания')
+    creationdate = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
 
 
 class Comment(models.Model):

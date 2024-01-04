@@ -27,7 +27,7 @@
                     <div class="avatar"><img src="{{ profile.avatar.url }}" alt="avatar"></div>
                     {% if user.username %}
                         {% if user.id != profile.user_id %}
-                            {% if subscribtion %}
+                             {% if profile in user.profile.following.all %}                               {#                            {% if subscribtion %}#}
                                 <button class="button-100perc button-inverted" id="unsubscribe-button">Отписаться</button>
                             {% else %}
                                 <button class="button-100perc" id="subscribe-button">Подписаться</button>
@@ -67,9 +67,8 @@
                 {% if user.username and profile.user == user %}
                     <form method="POST">
                         {% csrf_token %}
-                        <div class="opening-textfield">{{ postform.text }}</div>
-{#                        <div>{{ postform.user }}</div>#}
-{#                        <div>{{ postform.community }}</div>#}
+                        <div>{{ form.text }}</div>
+                        <div>{{ form.user }}</div>
                         <input type="submit" value="Отправить">
                     </form>
                 {% endif %}

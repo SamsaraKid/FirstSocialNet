@@ -97,25 +97,45 @@ def afterlogin(req):
 #     return render(req, 'socialapp/profile_detail.html', context={'profile': profile})
 
 
-# # class ProfileDetail(generic.DetailView):
-#     model = Profile
-#     slug_url_kwarg = 'slug'
+class ProfileDetail(generic.edit.FormMixin, generic.DetailView):
+    model = Profile
+    form_class = PostForm
+    slug_url_kwarg = 'slug'
+
+    def get_success_url(self):
+        return reverse('profile', kwargs={'slug': self.object.slug})
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileDetail, self).get_context_data(**kwargs)
+        context['form'] = PostForm(initial={'user': self.request.user.id})
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        form.save()
+        return super(ProfileDetail, self).form_valid(form)
 
 
-def profiledetail(req, slug):
-    profile = Profile.objects.get(slug=slug)
-    postform = PostForm()
-    subscribtion = False
-    if req.user.username:
-        subscribtion = profile in req.user.profile.following.all()
-    if req.POST:
-        postform = PostForm(req.POST)
-        if postform.is_valid():
-            newpost = Post(text=req.POST['text'], user=req.user, creationdate=datetime.datetime.now())
-            newpost.save()
-
-    return render(req, 'socialapp/profile_detail.html',
-                  context={'profile': profile, 'subscribtion': subscribtion, 'postform': postform})
+# def profiledetail(req, slug):
+#     profile = Profile.objects.get(slug=slug)
+#     postform = PostForm()
+#     subscribtion = False
+#     if req.user.username:
+#         subscribtion = profile in req.user.profile.following.all()
+#     if req.POST:
+#         postform = PostForm(req.POST)
+#         if postform.is_valid():
+#             newpost = Post(text=req.POST['text'], user=req.user, creationdate=datetime.datetime.now())
+#             newpost.save()
+#     return render(req, 'socialapp/profile_detail.html',
+#                   context={'profile': profile, 'subscribtion': subscribtion, 'postform': postform})
 
 
 @method_decorator(csrf_exempt, name='dispatch')

@@ -77,9 +77,12 @@ class SignUp(UserCreationForm):
             return username
 
 
-class PostForm(forms.Form):
-    text = forms.CharField(label='Текст поста', max_length=500,
-                          widget=forms.Textarea(attrs={'placeholder': 'Напишите что-нибудь. Максимум 500 знаков'}))
-    # class Meta:
-    #     model = Post
-    #     fields = ('text',)
+# class PostForm(forms.Form):
+#     text = forms.CharField(label='Текст поста', max_length=500,
+#                           widget=forms.Textarea(attrs={'placeholder': 'Напишите что-нибудь. Максимум 500 знаков'}))
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ('text', 'user', )
+        widgets = {'user': forms.HiddenInput,}
