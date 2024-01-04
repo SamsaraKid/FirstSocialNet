@@ -104,7 +104,6 @@ def afterlogin(req):
 def profiledetail(req, slug):
     profile = Profile.objects.get(slug=slug)
     subscribtion = profile in req.user.profile.following.all()
-    print(subscribtion)
     return render(req, 'socialapp/profile_detail.html', context={'profile': profile, 'subscribtion': subscribtion})
 
 
