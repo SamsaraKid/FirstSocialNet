@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+import datetime
 
 
 def index(req):
@@ -103,8 +104,18 @@ def afterlogin(req):
 
 def profiledetail(req, slug):
     profile = Profile.objects.get(slug=slug)
-    subscribtion = profile in req.user.profile.following.all()
-    return render(req, 'socialapp/profile_detail.html', context={'profile': profile, 'subscribtion': subscribtion})
+    postform = PostForm()
+    subscribtion = False
+    if req.user.username:
+        subscribtion = profile in req.user.profile.following.all()
+    if req.POST:
+        postform = PostForm(req.POST)
+        if postform.is_valid():
+            newpost = Post(text=req.POST['text'], user=req.user, creationdate=datetime.datetime.now())
+            newpost.save()
+
+    return render(req, 'socialapp/profile_detail.html',
+                  context={'profile': profile, 'subscribtion': subscribtion, 'postform': postform})
 
 
 @method_decorator(csrf_exempt, name='dispatch')

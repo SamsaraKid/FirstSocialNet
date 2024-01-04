@@ -20,32 +20,76 @@
             </ul>
         </div>
 
-        <div class="main-div flex-row line-under">
+        <div class="main-div">
 
-            <div class="profile-left-div">
-                <div class="avatar"><img src="{{ profile.avatar.url }}" alt="avatar"></div>
-                {% if user.id != profile.user_id %}
-                    {% if subscribtion %}
-                        <button class="button-100perc button-inverted" id="unsubscribe-button">Отписаться</button>
-                    {% else %}
-                        <button class="button-100perc" id="subscribe-button">Подписаться</button>
+            <div class="flex-row line-under">
+                <div class="profile-left-div">
+                    <div class="avatar"><img src="{{ profile.avatar.url }}" alt="avatar"></div>
+                    {% if user.username %}
+                        {% if user.id != profile.user_id %}
+                            {% if subscribtion %}
+                                <button class="button-100perc button-inverted" id="unsubscribe-button">Отписаться</button>
+                            {% else %}
+                                <button class="button-100perc" id="subscribe-button">Подписаться</button>
+                            {% endif %}
+                            <div id="user_id" hidden>{{ user.id }}</div>
+                            <div id="profile_id" hidden>{{ profile.user_id }}</div>
+                        {% endif %}
                     {% endif %}
-                    <div id="user_id" hidden>{{ user.id }}</div>
-                    <div id="profile_id" hidden>{{ profile.user_id }}</div>
+                </div>
+
+                <div class="profile-right-div">
+                    <table>
+                        <tr>
+                            <th colspan="2"><h3>{{ profile.name }} {{ profile.secondname }} {{ profile.surname }}</h3>
+                            </th>
+                        </tr>
+                        <tr class="line-under">
+                            <td colspan="2"><h3>{{ profile.user.username }}</h3></td>
+                        </tr>
+                        <tr>
+                            <th>Город:</th>
+                            <td>{{ profile.city }}</td>
+                        </tr>
+                        <tr>
+                            <th>Дата рождения:</th>
+                            <td>{{ profile.birthdate }}</td>
+                        </tr>
+                        <tr>
+                            <th>Информация:</th>
+                            <td>{{ profile.bio }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="line-under">
+                {% if user.username and profile.user == user %}
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="opening-textfield">{{ postform.text }}</div>
+{#                        <div>{{ postform.user }}</div>#}
+{#                        <div>{{ postform.community }}</div>#}
+                        <input type="submit" value="Отправить">
+                    </form>
+                {% endif %}
+                {% if profile.user.post_set.all %}
+                    {% for posts in profile.user.post_set.all reversed %}
+                        <div>
+                            <table>
+                                <tr><td>{{ posts.text }}</td></tr>
+                                <tr><td>{{ posts.creationdate }}</td></tr>
+                            </table>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div>Постов нет</div>
                 {% endif %}
             </div>
 
-            <div class="profile-right-div">
-                <table>
-                    <tr><th colspan="2"><h3>{{ profile.name }} {{ profile.secondname }} {{ profile.surname }}</h3></th></tr>
-                    <tr class="line-under"><td colspan="2"><h3>{{ profile.user.username }}</h3></td></tr>
-                    <tr><th>Город:</th><td>{{ profile.city }}</td></tr>
-                    <tr><th>Дата рождения:</th><td>{{ profile.birthdate }}</td></tr>
-                    <tr><th>Информация:</th><td>{{ profile.bio }}</td></tr>
-                </table>
-            </div>
-
         </div>
+
+
 
 
 

@@ -95,7 +95,7 @@ class Photo(models.Model):
     album = models.CharField(max_length=500, verbose_name='Альбом фото')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
     community = models.ForeignKey(Community, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Размещено в сообществе')
-    creationdate = models.DateField(verbose_name='Дата создания')
+    creationdate = models.DateTimeField(verbose_name='Дата создания')
 
 
 class Post(models.Model):
@@ -103,7 +103,7 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
     community = models.ForeignKey(Community, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Размещено в сообществе')
     photo = models.ManyToManyField(Photo, verbose_name='Прикреплённые фото')
-    creationdate = models.DateField(verbose_name='Дата создания')
+    creationdate = models.DateTimeField(verbose_name='Дата создания')
 
 
 class Comment(models.Model):
@@ -111,6 +111,6 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Пост комментария')
     photo = models.ForeignKey(Photo, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Фото комментария')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
-    creationdate = models.DateField(verbose_name='Дата создания')
+    creationdate = models.DateTimeField(verbose_name='Дата создания')
 
 
