@@ -14,7 +14,7 @@
 
     <header>
         <div class="center-width margin-auto">{% block head %}
-            <ul class="flex-row align-items-center just-cont-spa-bet">
+            <ul class="flex-row align-items-center just-cont-spa-bet h100pc">
                 <li><a href="{% url 'home' %}" class="link-clean"><h2>СОЦСЕТЬ</h2></a></li>
                 {% if user.username %}
                     <li><a href="{% url 'home' %}" class="link-clean"><p>люди</p></a></li>
@@ -32,7 +32,11 @@
         {% endblock main %}
     {% endblock content %}
 
-    <footer class="margin-auto text-center card-simple w350">Андрей Королёв © 2023</footer>
+    {% block footer %}
+        <footer class="margin-auto text-center card-simple w350">
+            Андрей Королёв © 2023
+        </footer>
+    {% endblock footer %}
 
 </body>
 </html>

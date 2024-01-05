@@ -33,13 +33,34 @@ th{
 
 .line-under{
     border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 15px;
+    width: 100%;
 }
 
-textarea{
+/*textarea{*/
+/*    width: 100%;*/
+/*    height: 4ex;*/
+/*}*/
+
+/*textarea:focus{*/
+/*    height: 15ex;*/
+/*}*/
+
+
+p{
+    margin: 0;
+}
+
+.opening-postfield{
     width: 100%;
     height: 4ex;
+    overflow: hidden;
+    border-radius: 10px;
+    margin-bottom: 10px;
 }
 
-textarea:focus{
+.opening-postfield textarea{
+    width: 100%;
     height: 15ex;
+    border: none;
 }

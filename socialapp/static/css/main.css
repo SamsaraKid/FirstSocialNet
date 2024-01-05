@@ -75,6 +75,11 @@ button, input[type=submit]{
     width: 100%; !important;
 }
 
+/*.button-content-width{*/
+/*    width: min-content;*/
+/*    aspect-ratio: 1 / 1;*/
+/*}*/
+
 button:hover, input[type=submit]:hover{
     background-color: #e0e0e0;
 }
@@ -98,10 +103,32 @@ input[type=file]{
 
 .card-simple{
     background-color: #1f1f1f;
-    width: max-content;
-    padding: 15px 0;
+    /*width: max-content;*/
+    padding: 15px;
     margin-bottom: 15px !important;
     border-radius: 10px;
+    position: relative;
+}
+
+.card-simple p{
+    padding-right: 50px;
+}
+
+.delete-button{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    font-size: small;
+    width: 20px;
+    height: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }
 
 ul{
@@ -146,6 +173,10 @@ li{
     /*height: 100%;*/
 }
 
+.h100pc{
+    height: 100%;
+}
+
 .align-items-center{
     align-items: center;
 }
@@ -171,7 +202,6 @@ li{
 }
 
 
-
 .main-div{
     width: 85%;
 }
@@ -183,3 +213,13 @@ li{
 .menu-left{
     width: 15%;
 }
+
+.small-font{
+    font-size: small;
+    color: #3d3d3d;
+}
+
+.text-align-right{
+    text-align: right;
+}
+
