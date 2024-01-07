@@ -5,6 +5,28 @@ from django.urls import reverse
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 import os
+from django.utils.deconstruct import deconstructible
+
+# @deconstructible
+# class UploadToPath(object):
+#     path = '{0}/{1}/{2}'
+#
+#     def __init__(self, sub_path):
+#         self.sub_path = sub_path
+#
+#     def __call__(self, instance, filename):
+#         return self.path.format(instance.user.username, self.sub_path, filename)
+
+@deconstructible
+class UploadToPath(object):
+    path = '{0}/{1}/{2}'
+
+    # def __init__(self, sub_path):
+    #     self.sub_path = sub_path
+
+    def __call__(self, instance, filename):
+        return self.path.format(instance.user.username, instance.album, filename)
+
 
 
 def avatar_upload_to(instance, filename):
@@ -91,11 +113,12 @@ def save_user_profile(sender, instance, **kwargs):
 
 
 class Photo(models.Model):
-    link = models.CharField(max_length=500, verbose_name='Адрес фото')
+    # link = models.CharField(max_length=500, verbose_name='Адрес фото')
     album = models.CharField(max_length=500, verbose_name='Альбом фото')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
+    link = models.ImageField(upload_to=UploadToPath())
     community = models.ForeignKey(Community, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Размещено в сообществе')
-    creationdate = models.DateTimeField(verbose_name='Дата создания')
+    creationdate = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
 
 
 class Post(models.Model):

@@ -125,10 +125,17 @@ def profiledetail(req, slug):
     if req.user.username:
         subscribtion = profile in req.user.profile.following.all()
     if req.POST:
-        postform = PostForm(req.POST)
+        postform = PostForm(req.POST, req.FILES)
         if postform.is_valid():
+            # postphoto = req.FILES['photo']
+            # file = open('media/' + req.user.username + '/wall' + )
             newpost = Post(text=req.POST['text'], user=req.user, creationdate=datetime.datetime.now())
             newpost.save()
+            if postform.cleaned_data['photo']:
+                photo = Photo(album='wall', user=req.user, link=postform.cleaned_data['photo'])
+                photo.save()
+                newpost.photo.add(photo)
+            # newpost.save()
             return HttpResponseRedirect(req.path)
     return render(req, 'socialapp/profile_detail.html',
                   context={'profile': profile, 'subscribtion': subscribtion, 'form': postform})
@@ -161,3 +168,8 @@ def unsubscribe(req):
         user.following.remove(profile)
         print('Подписка отменена')
         return JsonResponse({'mes': 'Подписка отменена', 'link': ''})
+
+#
+# class ProfileList(generic.ListView):
+#     model = Profile
+#     queryset = Profile.following.get_queryset()

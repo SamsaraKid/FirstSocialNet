@@ -80,6 +80,7 @@ class SignUp(UserCreationForm):
 class PostForm(forms.Form):
     text = forms.CharField(label='Текст поста', max_length=500,
                           widget=forms.Textarea(attrs={'placeholder': 'Напишите что-нибудь'}))
+    photo = forms.ImageField(label='Фото', required=False)
 
 # class PostForm(forms.ModelForm):
 #     class Meta:

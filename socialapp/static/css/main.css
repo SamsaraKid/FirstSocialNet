@@ -21,6 +21,7 @@ header{
     position: fixed;
     top: 0;
     background-color: #1f1f1f;
+    z-index: 1;
 }
 
 input[type=text], input[type=password], input[type=email], textarea{
@@ -108,10 +109,17 @@ input[type=file]{
     margin-bottom: 15px !important;
     border-radius: 10px;
     position: relative;
+    /*z-index: -1;*/
 }
 
 .card-simple p{
     padding-right: 50px;
+}
+
+.card-simple img{
+    height: 400px;
+    display: block;
+    margin: 10px auto;
 }
 
 .delete-button{
@@ -183,6 +191,10 @@ li{
 
 .just-cont-spa-bet{
     justify-content: space-between;
+}
+
+.just-cont-left{
+    justify-content: start;
 }
 
 .link-clean{
