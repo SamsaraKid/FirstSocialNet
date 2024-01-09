@@ -164,6 +164,10 @@ li{
     margin-bottom: 15px;
 }
 
+.margin-right-short{
+    margin-right: 10px;
+}
+
 .text-center{
     text-align: center;
 }
@@ -234,4 +238,6 @@ li{
 .text-align-right{
     text-align: right;
 }
+
+
 

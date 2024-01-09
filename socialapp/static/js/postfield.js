@@ -27,3 +27,11 @@ document.addEventListener('click', (e) =>{
 })
 
 
+// кнопка выбора фото
+$('.input-file input[type=file]').on('change', function(){
+    console.log('done')
+	let file = this.files[0]
+    console.log(file.name)
+	$(this).closest('.input-file').find('.input-file-text').html(file.name)
+})
+

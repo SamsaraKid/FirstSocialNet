@@ -71,10 +71,16 @@
                             {% csrf_token %}
                             <div>{{ form.text }}</div>
                             {#                        <div>{{ form.user }}</div>#}
-                            <div class="flex-row just-cont-left">
-                                <div><input type="submit" class="margin-auto hidden" value="Отправить"></div>
-                                <div class="input-file">{{ form.photo }}</div>
+                            <div class="flex-row">
+                                <div class="margin-right-short">
+                                    <input type="submit" class="margin-auto hidden" value="Отправить">
                                 </div>
+                                <label class="input-file">
+                                    <input type="file" name="photo" accept="image/*" id="id_photo">
+                                    <span class="input-file-btn">Выберите фото</span>
+                                    <span class="input-file-text"></span>
+                                </label>  {# {{ form.photo }} #}
+                            </div>
                         </form>
                     </div>
                 {% endif %}
