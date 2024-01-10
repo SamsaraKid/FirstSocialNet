@@ -26,11 +26,13 @@ urlpatterns = [
     path('registration/', views.registration, name='registration'),
     path('user/', include('django.contrib.auth.urls')),
     path('login/', views.index, name='login'),
-    path('<slug:slug>/', views.profiledetail, name='profile'),
+
     # path('<slug:slug>/', views.ProfileDetail.as_view(), name='profile'),
     path('subscribe', views.subscribe, name='subscribe'),
     path('unsubscribe', views.unsubscribe, name='unsubscribe'),
-    path('delpost/<int:id>', views.delpost, name='delpost')
+    path('delpost/<int:id>', views.delpost, name='delpost'),
+    path('news/', views.NewsList.as_view(), name='news'),
+    path('<slug:slug>/', views.profiledetail, name='profile'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

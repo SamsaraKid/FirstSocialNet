@@ -122,6 +122,7 @@ def profiledetail(req, slug):
     profile = Profile.objects.get(slug=slug)
     postform = PostForm()
     subscribtion = False
+    print(req.user.profile.following.all)
     if req.user.username:
         subscribtion = profile in req.user.profile.following.all()
     if req.POST:
@@ -169,7 +170,17 @@ def unsubscribe(req):
         print('Подписка отменена')
         return JsonResponse({'mes': 'Подписка отменена', 'link': ''})
 
-#
-# class ProfileList(generic.ListView):
-#     model = Profile
-#     queryset = Profile.following.get_queryset()
+
+class NewsList(generic.ListView):
+    model = Post
+    template_name = 'socialapp/news.html'
+
+    def get_queryset(self):
+        # original qs
+        qs = super().get_queryset()
+        # self.request.user.profile.following
+        # filter by a variable captured from url, for example
+        print(self.request.user.profile.following.all())
+        q = qs.filter(user__in=self.request.user.profile.following.all())
+        print(q)
+        return qs #.filter(user__in=self.request.user.profile.following.values_list())

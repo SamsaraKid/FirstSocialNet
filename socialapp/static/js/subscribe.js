@@ -1,7 +1,7 @@
 let sub_but = document.getElementById('subscribe-button')
 let unsub_but = document.getElementById('unsubscribe-button')
-if (sub_but){sub_but.onclick = f1};
-if (unsub_but){unsub_but.onclick = f2};
+if (sub_but){sub_but.onclick = f1}
+if (unsub_but){unsub_but.onclick = f2}
 
 function f1(){
     let user_id = document.getElementById('user_id').textContent
