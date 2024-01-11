@@ -1,15 +1,36 @@
-.avatar{
-    width: 100%;
+.avatar, .avatar-small{
     aspect-ratio: 1 / 1;
     overflow: hidden;
     border-radius: 50%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.avatar{
+    width: 100%;
     margin-bottom: 10px;
 }
-
-.avatar img{
+.avatar-small{
+    width: 50px;
+    float: left;
+}
+.avatar img, .avatar-small img{
     width: 100%;
+    height: unset;
     position: center;
 }
+
+.post-user-name{
+    margin-left: 60px;
+    margin-bottom: 10px;
+    height: 50px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 
 .profile-left-div{
     padding: 10px;

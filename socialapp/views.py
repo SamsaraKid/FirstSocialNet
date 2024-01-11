@@ -143,8 +143,10 @@ def profiledetail(req, slug):
 
 
 def delpost(req, id):
+    prev_page = req.GET.get('next') if req.GET.get('next') is not None else ''
     Post.objects.get(id=id).delete()
-    return redirect('../')
+    return redirect(prev_page) if prev_page else redirect('home')
+    # return redirect('../')
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -176,11 +178,7 @@ class NewsList(generic.ListView):
     template_name = 'socialapp/news.html'
 
     def get_queryset(self):
-        # original qs
         qs = super().get_queryset()
-        # self.request.user.profile.following
-        # filter by a variable captured from url, for example
-        print(self.request.user.profile.following.all())
-        q = qs.filter(user__in=self.request.user.profile.following.all())
-        print(q)
-        return qs #.filter(user__in=self.request.user.profile.following.values_list())
+        follow = self.request.user.profile.following.values('user_id')
+        return qs.filter(user_id__in=follow) | qs.filter(user_id=self.request.user.id)
+
