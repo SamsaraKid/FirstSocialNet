@@ -9,18 +9,19 @@
     <script src="{% static 'js/postfield.js' %}" defer></script>
 {% endblock script %}
 
-{% block content %}
-    <div class="center-width margin-auto flex-row">
-
-        <div class="menu-left">
-            <ul>
-                <li><a class="link-clean" href="{% url 'home' %}">Моя страница</a></li>
-                <li><a class="link-clean" href="{% url 'news' %}">Мои новости</a></li>
-                <li><a class="link-clean" href="">Мои подписки</a></li>
-                <li><a class="link-clean" href="">Мои сообщества</a></li>
-                <li><a class="link-clean" href="">Мои фото</a></li>
-            </ul>
-        </div>
+{#{% block content %}#}
+{% block main %}
+{#    <div class="center-width margin-auto flex-row">#}
+{##}
+{#        <div class="menu-left">#}
+{#            <ul>#}
+{#                <li><a class="link-clean" href="{% url 'home' %}">Моя страница</a></li>#}
+{#                <li><a class="link-clean" href="{% url 'news' %}">Мои новости</a></li>#}
+{#                <li><a class="link-clean" href="">Мои подписки</a></li>#}
+{#                <li><a class="link-clean" href="">Мои сообщества</a></li>#}
+{#                <li><a class="link-clean" href="">Мои фото</a></li>#}
+{#            </ul>#}
+{#        </div>#}
 
         <div class="main-div">
 
@@ -112,7 +113,8 @@
 
 
 
-    </div>
-{% endblock content %}
+{#    </div>#}
+    {% endblock main %}
+{#{% endblock content %}#}
 
 {% block footer %}{% endblock footer %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ profile.name }} {{ profile.surname }}{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/search.css' %}">
+{% endblock css %}
+{% block script %}
+    <script src="{% static 'js/subscribe.js' %}" defer></script>
+    <script src="{% static 'js/postfield.js' %}" defer></script>
+{% endblock script %}
+
+
+{% block main %}
+
+        <div class="main-div">
+        <form method="post" class="margin-bottom15">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" class="margin-auto hidden" value="Искать">
+        </form>
+        {% for profile in profiles %}
+            <div class="card-simple flex-row just-cont-spa-bet">
+                <a class="link-inline" href="{{ profile.get_absolute_url }}">
+                    <div class="avatar-small"><img src="{{ profile.avatar.url }}" alt="avatar">
+                    </div>
+                    <div class="card-user-name">
+                        <div>{{ profile.name }} {{ profile.surname }}</div>
+                        <div>({{ profile.slug }})</div>
+                    </div>
+                </a>
+                <div class="card-info">
+                    <div>Город: {{ profile.city }}</div>
+                    <div>Дата рождения: {{ profile.birthdate }}</div>
+                </div>
+            </div>
+        {% endfor %}
+
+        </div>
+
+
+
+
+{% endblock main %}
+
+{% block footer %}{% endblock footer %}

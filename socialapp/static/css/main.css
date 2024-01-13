@@ -217,6 +217,18 @@ li{
     background-color: #3d3d3d;
 }
 
+.link-inline{
+    color: inherit;
+}
+
+.link-inline:checked{
+    color: inherit;
+}
+
+.link-inline:hover{
+    color: #e0e0e0;
+}
+
 
 .main-div{
     width: 85%;

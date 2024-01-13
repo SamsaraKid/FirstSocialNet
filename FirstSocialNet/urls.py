@@ -32,6 +32,7 @@ urlpatterns = [
     path('unsubscribe', views.unsubscribe, name='unsubscribe'),
     path('delpost/<int:id>', views.delpost, name='delpost'),
     path('news/', views.NewsList.as_view(), name='news'),
+    path('peoplesearch/', views.peoplesearch, name='peoplesearch'),
     path('<slug:slug>/', views.profiledetail, name='profile'),
 ]
 

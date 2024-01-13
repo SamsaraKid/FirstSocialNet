@@ -11,6 +11,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import datetime
+from django.db.models import Q
 
 
 def index(req):
@@ -122,7 +123,6 @@ def profiledetail(req, slug):
     profile = Profile.objects.get(slug=slug)
     postform = PostForm()
     subscribtion = False
-    print(req.user.profile.following.all)
     if req.user.username:
         subscribtion = profile in req.user.profile.following.all()
     if req.POST:
@@ -182,3 +182,33 @@ class NewsList(generic.ListView):
         follow = self.request.user.profile.following.values('user_id')
         return qs.filter(user_id__in=follow) | qs.filter(user_id=self.request.user.id)
 
+
+def peoplesearch(req):
+    profiles = ''
+    searchresult = False
+    form = PeopleSearchForm()
+    if req.POST:
+        form = PeopleSearchForm(req.POST)
+        if form.is_valid():
+            if len(req.POST['query'].split(' ')) > 1:
+                query = req.POST['query'].split(' ')
+                profiles = Profile.objects.filter(Q(name=query[0], surname=query[1]) |
+                                                  Q(name=query[1], surname=query[0]))
+            else:
+                profiles = Profile.objects.filter(Q(name=req.POST['query']) |
+                                                  Q(surname=req.POST['query']) |
+                                                  Q(secondname=req.POST['query']) |
+                                                  Q(slug=req.POST['query']))
+            if profiles:
+                searchresult = True
+    return render(req, 'socialapp/people.html', context={'form': form, 'profiles': profiles})
+
+
+class FollowPeopleList(generic.ListView):
+    model = Profile
+    template_name = 'socialapp/followpeoplelist.html'
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        follow = self.request.user.profile.following.values('user_id')
+        return qs.filter(user_id__in=follow) | qs.filter(user_id=self.request.user.id)

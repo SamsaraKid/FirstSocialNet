@@ -21,14 +21,29 @@
     position: center;
 }
 
-.post-user-name{
+.card-user-name{
     margin-left: 60px;
-    margin-bottom: 10px;
+    /*margin-bottom: 10px;*/
     height: 50px;
     font-weight: bold;
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+}
+
+.card-info{
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+
+}
+
+.card-info div{
+    width: 100%;
+    text-align: right;
 }
 
 

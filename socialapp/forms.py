@@ -89,4 +89,6 @@ class PostForm(forms.Form):
 #         widgets = {'user': forms.HiddenInput,
 #                    'text': forms.Textarea(attrs={'placeholder': 'Напишите что-нибудь'})}
 
-
+class PeopleSearchForm(forms.Form):
+    query = forms.CharField(label='', max_length=500,
+                          widget=forms.TextInput(attrs={'placeholder': 'Введите имя, фамилию или имя пользователя'}))

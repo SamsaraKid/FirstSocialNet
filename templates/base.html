@@ -17,7 +17,7 @@
             <ul class="flex-row align-items-center just-cont-spa-bet h100pc">
                 <li><a href="{% url 'home' %}" class="link-clean"><h2>СОЦСЕТЬ</h2></a></li>
                 {% if user.username %}
-                    <li><a href="{% url 'home' %}" class="link-clean"><p>люди</p></a></li>
+                    <li><a href="{% url 'peoplesearch' %}" class="link-clean"><p>люди</p></a></li>
                     <li><a href="{% url 'home' %}" class="link-clean"><p>сообщества</p></a></li>
                     <li><a href="{% url 'logout' %}" class="link-clean"><p>выйти</p></a></li>
                 {% endif %}
@@ -26,11 +26,31 @@
     </header>
 
     {% block content %}
+<div class="center-width margin-auto flex-row">
         {% block menu %}
-        {% endblock menu %}
-        {% block main %}
-        {% endblock main %}
+        <div class="menu-left">
+            <ul>
+                <li><a class="link-clean" href="{% url 'home' %}">Моя страница</a></li>
+                <li><a class="link-clean" href="{% url 'news' %}">Мои новости</a></li>
+                <li><a class="link-clean" href="">Мои подписки</a></li>
+                <li><a class="link-clean" href="">Мои сообщества</a></li>
+                <li><a class="link-clean" href="">Мои фото</a></li>
+            </ul>
+        </div>
+            {% endblock menu %}
+
+            {% block main %}
+            {% endblock main %}
+
+
+
+
+
+
+
+    </div>
     {% endblock content %}
+
 
     {% block footer %}
         <footer class="margin-auto text-center card-simple w350">
