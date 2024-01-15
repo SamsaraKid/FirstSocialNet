@@ -232,6 +232,7 @@ li{
 
 .main-div{
     width: 85%;
+    padding-top: 10px;
 }
 
 .main-div table{
@@ -239,7 +240,12 @@ li{
 }
 
 .menu-left{
-    width: 15%;
+    /*width: 15%;*/
+    position: fixed;
+}
+
+.menu-left-div{
+    width: 150px;
 }
 
 .small-font{

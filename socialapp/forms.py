@@ -56,6 +56,7 @@ class SignUp(UserCreationForm):
     city = forms.ModelChoiceField(label='Город', queryset=City.objects.all().order_by('name'), required=False)
     country = forms.ModelChoiceField(label='Страна', queryset=Country.objects.all().order_by('name'), required=False)
     city_custom = forms.CharField(label='Город', max_length=50, required=False)
+    city_custom_sign = forms.BooleanField(label='Признак нового города', required=False)
     bio = forms.CharField(label='Информация о вас', max_length=500, required=False,
                           widget=forms.Textarea(attrs={'placeholder': 'Максимум 500 знаков'}))
     avatar = forms.ImageField(label='Аватар')

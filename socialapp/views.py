@@ -71,7 +71,8 @@ def registration(req):
             profile.surname = userform.cleaned_data.get('surname')
             profile.secondname = userform.cleaned_data.get('secondname')
             profile.birthdate = userform.cleaned_data.get('birthdate')
-            if userform.cleaned_data.get('city_custom'):
+            # if userform.cleaned_data.get('city_custom'):
+            if userform.cleaned_data.get('city_custom_sign'):
                 new_city = City.objects.create(country=userform.cleaned_data.get('country'),
                                                name=userform.cleaned_data.get('city_custom'),
                                                add_by_user=True)
@@ -206,9 +207,20 @@ def peoplesearch(req):
 
 class FollowPeopleList(generic.ListView):
     model = Profile
-    template_name = 'socialapp/followpeoplelist.html'
+    template_name = 'socialapp/follow_people_list.html'
 
     def get_queryset(self):
         qs = super().get_queryset()
         follow = self.request.user.profile.following.values('user_id')
-        return qs.filter(user_id__in=follow) | qs.filter(user_id=self.request.user.id)
+        return qs.filter(user_id__in=follow)
+
+
+class ProfileUpdate(generic.UpdateView):
+    model = Profile
+    template_name = 'socialapp/profile_update.html'
+    fields = ['name', 'surname', 'secondname', 'city', 'birthdate', 'avatar', 'bio']
+    success_url = '/'
+
+    def get_object(self):
+        return self.request.user.profile
+

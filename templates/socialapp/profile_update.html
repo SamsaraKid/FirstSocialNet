@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ profile.name }} {{ profile.surname }}{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock css %}
+{% block script %}
+    <script src="{% static 'js/subscribe.js' %}" defer></script>
+    <script src="{% static 'js/postfield.js' %}" defer></script>
+    <script src="{% static 'js/registration.js' %}" defer></script>
+{% endblock script %}
+
+
+{% block main %}
+
+        <div class="main-div">
+
+        <form method="post" novalidate>
+            {%csrf_token %}
+        
+            <table class="margin-auto margin-bottom15">
+                <tr><th>{{ form.username.label_tag }}</th><td>{{ form.username }}</td></tr>
+                <tr><th>{{ form.password1.label_tag }}</th><td>{{ form.password1 }}</td></tr>
+                <tr><th>{{ form.password2.label_tag }}</th><td>{{ form.password2 }}</td></tr>
+                <tr><th>{{ form.email.label_tag }}</th><td>{{ form.email }}</td></tr>
+                <tr><th>{{ form.name.label_tag }}</th><td>{{ form.name }}</td></tr>
+                <tr><th>{{ form.surname.label_tag }}</th><td>{{ form.surname }}</td></tr>
+                <tr><th>{{ form.secondname.label_tag }}</th><td>{{ form.secondname }}</td></tr>
+                <tr><th>{{ form.birthdate.label_tag }}</th><td>{{ form.birthdate }}</td></tr>
+                <tr id="id_city_tr"><th>{{ form.city.label_tag }}</th><td>{{ form.city }}</td></tr>
+                <tr><th>Не нашли свой город?</th><td><button type="button" id="add_new_city">Добавить новый город</button></td></tr>
+                <tr id="id_country_tr" hidden><th>{{ form.country.label_tag }}</th><td>{{ form.country }}</td></tr>
+                <tr id="id_city_custom_tr" hidden><th>{{ form.city_custom.label_tag }}</th><td>{{ form.city_custom }}</td></tr>
+                <tr><th>{{ form.bio.label_tag }}</th><td>{{ form.bio }}</td></tr>
+                <tr><th>{{ form.avatar.label_tag }}</th><td><input type="file" name="avatar" accept="image/*" required="" id="id_avatar"></td></tr> {# {{ form.avatar }} #}
+            </table>
+        
+        
+        
+        
+
+{#            {% for field in form %}#}
+{#                {{ field.label_tag }}#}
+{#				{{ field }}#}
+{#            {% endfor %}#}
+        <input type="submit" value="Отправить">
+        </form>
+
+
+        </div>
+
+
+
+
+{% endblock main %}
+
+{% block footer %}{% endblock footer %}

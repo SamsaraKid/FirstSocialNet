@@ -16,8 +16,10 @@
     float: left;
 }
 .avatar img, .avatar-small img{
+    object-fit: cover;
     width: 100%;
-    height: unset;
+    height: 100%;
+    /*height: unset;*/
     position: center;
 }
 

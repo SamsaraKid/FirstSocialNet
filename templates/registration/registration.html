@@ -22,6 +22,7 @@
                 <tr><th>Не нашли свой город?</th><td><button type="button" id="add_new_city">Добавить новый город</button></td></tr>
                 <tr id="id_country_tr" hidden><th>{{ userform.country.label_tag }}</th><td>{{ userform.country }}</td></tr>
                 <tr id="id_city_custom_tr" hidden><th>{{ userform.city_custom.label_tag }}</th><td>{{ userform.city_custom }}</td></tr>
+                <tr hidden><th>{{ userform.city_custom_sign }}</th></tr>
                 <tr><th>{{ userform.bio.label_tag }}</th><td>{{ userform.bio }}</td></tr>
                 <tr><th>{{ userform.avatar.label_tag }}</th><td><input type="file" name="avatar" accept="image/*" required="" id="id_avatar"></td></tr> {# {{ userform.avatar }} #}
 {#                {% for i in userform %}#}

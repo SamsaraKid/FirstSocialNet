@@ -26,13 +26,14 @@ urlpatterns = [
     path('registration/', views.registration, name='registration'),
     path('user/', include('django.contrib.auth.urls')),
     path('login/', views.index, name='login'),
-
     # path('<slug:slug>/', views.ProfileDetail.as_view(), name='profile'),
     path('subscribe', views.subscribe, name='subscribe'),
     path('unsubscribe', views.unsubscribe, name='unsubscribe'),
     path('delpost/<int:id>', views.delpost, name='delpost'),
     path('news/', views.NewsList.as_view(), name='news'),
+    path('follow/', views.FollowPeopleList.as_view(), name='followpeople'),
     path('peoplesearch/', views.peoplesearch, name='peoplesearch'),
+    path('profileupdate/', views.ProfileUpdate.as_view(), name='profileupdate'), #<slug:slug>
     path('<slug:slug>/', views.profiledetail, name='profile'),
 ]
 

@@ -28,15 +28,18 @@
     {% block content %}
 <div class="center-width margin-auto flex-row">
         {% block menu %}
-        <div class="menu-left">
-            <ul>
-                <li><a class="link-clean" href="{% url 'home' %}">Моя страница</a></li>
-                <li><a class="link-clean" href="{% url 'news' %}">Мои новости</a></li>
-                <li><a class="link-clean" href="">Мои подписки</a></li>
-                <li><a class="link-clean" href="">Мои сообщества</a></li>
-                <li><a class="link-clean" href="">Мои фото</a></li>
-            </ul>
-        </div>
+            <div class="menu-left-div">
+                <div class="menu-left">
+                    <ul>
+                        <li><a class="link-clean" href="{% url 'home' %}">Моя страница</a></li>
+                        <li><a class="link-clean" href="{% url 'news' %}">Мои новости</a></li>
+                        <li><a class="link-clean" href="{% url 'followpeople' %}">Мои подписки</a></li>
+                        <li><a class="link-clean" href="">Мои сообщества</a></li>
+                        <li><a class="link-clean" href="">Мои фото</a></li>
+                        <li><a class="link-clean" href="{% url 'profileupdate'%}">Мои настройки</a></li> {# user.username #}
+                    </ul>
+                </div>
+            </div>
             {% endblock menu %}
 
             {% block main %}
