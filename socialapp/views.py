@@ -142,7 +142,7 @@ def profiledetail(req, slug):
     return render(req, 'socialapp/profile_detail.html',
                   context={'profile': profile, 'subscribtion': subscribtion, 'form': postform})
 
-
+@login_required()
 def delpost(req, id):
     prev_page = req.GET.get('next') if req.GET.get('next') is not None else ''
     Post.objects.get(id=id).delete()
@@ -183,7 +183,7 @@ class NewsList(generic.ListView):
         follow = self.request.user.profile.following.values('user_id')
         return qs.filter(user_id__in=follow) | qs.filter(user_id=self.request.user.id)
 
-
+@login_required()
 def peoplesearch(req):
     profiles = ''
     searchresult = False
@@ -215,27 +215,54 @@ class FollowPeopleList(generic.ListView):
         return qs.filter(user_id__in=follow)
 
 
-class ProfileUpdate(generic.UpdateView):
-    model = Profile
-    form_class = SignUp
-    template_name = 'socialapp/profile_update.html'
-    # fields = ['name', 'surname', 'secondname', 'city', 'birthdate', 'avatar', 'bio']
-    success_url = '/'
+# class ProfileUpdate(generic.UpdateView):
+#     model = Profile
+#     form_class = SignUp
+#     template_name = 'socialapp/profile_update.html'
+#     # fields = ['name', 'surname', 'secondname', 'city', 'birthdate', 'avatar', 'bio']
+#     success_url = '/'
+#
+#     def get_object(self):
+#         return self.request.user.profile
+#
+#     def get_initial(self):
+#         initial = super(ProfileUpdate, self).get_initial()
+#         initial['name'] = self.request.user.profile.name
+#         initial['surname'] = self.request.user.profile.surname
+#         initial['secondname'] = self.request.user.profile.secondname
+#         initial['city'] = self.request.user.profile.city
+#         initial['birthdate'] = self.request.user.profile.birthdate
+#         initial['avatar'] = self.request.user.profile.avatar
+#         initial['bio'] = self.request.user.profile.bio
+#         return initial
 
-    def get_object(self):
-        return self.request.user.profile
-
-    def get_initial(self):
-        initial = super(ProfileUpdate, self).get_initial()
-        initial['name'] = self.request.user.profile.name
-        initial['surname'] = self.request.user.profile.surname
-        initial['secondname'] = self.request.user.profile.secondname
-        initial['city'] = self.request.user.profile.city
-        initial['birthdate'] = self.request.user.profile.birthdate
-        initial['avatar'] = self.request.user.profile.avatar
-        initial['bio'] = self.request.user.profile.bio
-        return initial
-
-
-
-
+@login_required()
+def profileupdate(req):
+    profile = Profile.objects.get(user_id=req.user.id)
+    if req.POST:
+        form = ProfileUpdate(req.POST, req.FILES)
+        if form.is_valid():
+            profile.name = form.cleaned_data.get('name')
+            profile.surname = form.cleaned_data.get('surname')
+            profile.secondname = form.cleaned_data.get('secondname')
+            profile.name = form.cleaned_data.get('name')
+            profile.birthdate = form.cleaned_data.get('birthdate')
+            print(form.cleaned_data.get('city_custom_sign'))
+            if form.cleaned_data.get('city_custom_sign'):
+                print('new city')
+                new_city = City.objects.create(country=form.cleaned_data.get('country'),
+                                               name=form.cleaned_data.get('city_custom'),
+                                               add_by_user=True)
+                profile.city = new_city
+            else:
+                profile.city = form.cleaned_data.get('city')
+            profile.bio = form.cleaned_data.get('bio')
+            if form.cleaned_data.get('avatar'):
+                profile.avatar = form.cleaned_data.get('avatar')
+            profile.save()
+        else:
+            print(form.errors)
+    form = ProfileUpdate(initial={'name': profile.name, 'surname': profile.surname, 'secondname': profile.secondname,
+                                  'birthdate': profile.birthdate, 'city': profile.city_id, 'bio': profile.bio,
+                                  'avatar': profile.avatar})
+    return render(req, 'socialapp/profile_update.html', context={'form': form, 'profile': profile})

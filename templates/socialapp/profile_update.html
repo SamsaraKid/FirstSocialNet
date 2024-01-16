@@ -15,32 +15,79 @@
 
         <div class="main-div">
 
-        <form method="post" novalidate enctype="multipart/form-data">
-            {%csrf_token %}
-        
-            <table class="margin-auto margin-bottom15">
-                <tr><th>{{ form.name.label_tag }}</th><td>{{ form.name }}</td></tr>
-                <tr><th>{{ form.surname.label_tag }}</th><td>{{ form.surname }}</td></tr>
-                <tr><th>{{ form.secondname.label_tag }}</th><td>{{ form.secondname }}</td></tr>
-                <tr><th>{{ form.birthdate.label_tag }}</th><td>{{ form.birthdate }}</td></tr>
-                <tr id="id_city_tr"><th>{{ form.city.label_tag }}</th><td>{{ form.city }}</td></tr>
-                <tr><th>Не нашли свой город?</th><td><button type="button" id="add_new_city">Добавить новый город</button></td></tr>
-                <tr id="id_country_tr" hidden><th>{{ form.country.label_tag }}</th><td>{{ form.country }}</td></tr>
-                <tr id="id_city_custom_tr" hidden><th>{{ form.city_custom.label_tag }}</th><td>{{ form.city_custom }}</td></tr>
-                <tr><th>{{ form.bio.label_tag }}</th><td>{{ form.bio }}</td></tr>
-                <tr><th>{{ form.avatar.label_tag }}</th><td><input type="file" name="avatar" accept="image/*" required="" id="id_avatar"></td></tr> {# {{ form.avatar }} #}
-            </table>
-        
-        
-        
-        
+            <div class="text-center card-simple">
+                <form method="post" novalidate enctype="multipart/form-data">
+                    {% csrf_token %}
 
-{#            {% for field in form %}#}
-{#                {{ field.label_tag }}#}
-{#				{{ field }}#}
-{#            {% endfor %}#}
-        <input type="submit" value="Отправить">
-        </form>
+                    <table class="margin-auto margin-bottom15 profile-update-table">
+                        <tr>
+                            <th>{{ form.name.label_tag }}</th>
+                            <td>{{ form.name }}</td>
+                            <td>{{ form.name.errors }}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ form.surname.label_tag }}</th>
+                            <td>{{ form.surname }}</td>
+                            <td>{{ form.surname.errors }}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ form.secondname.label_tag }}</th>
+                            <td>{{ form.secondname }}</td>
+                            <td>{{ form.secondname.errors }}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ form.birthdate.label_tag }}</th>
+                            <td>{{ form.birthdate }}</td>
+                            <td>{{ form.birthdate.errors }}</td>
+                        </tr>
+                        <tr id="id_city_tr">
+                            <th>{{ form.city.label_tag }}</th>
+                            <td>{{ form.city }}</td>
+                            <td>{{ form.city.errors }}</td>
+                        </tr>
+                        <tr>
+                            <th>Не нашли свой город?</th>
+                            <td>
+                                <button type="button" id="add_new_city">Добавить новый город</button>
+                            </td>
+                        </tr>
+                        <tr id="id_country_tr" hidden>
+                            <th>{{ form.country.label_tag }}</th>
+                            <td>{{ form.country }}</td>
+                            <td>{{ form.country.errors }}</td>
+                        </tr>
+                        <tr id="id_city_custom_tr" hidden>
+                            <th>{{ form.city_custom.label_tag }}</th>
+                            <td>{{ form.city_custom }}</td>
+                            <td>{{ form.city_custom.errors }}</td>
+                        </tr>
+                        <tr hidden><th>{{ form.city_custom_sign }}</th></tr>
+                        <tr>
+                            <th>{{ form.bio.label_tag }}</th>
+                            <td>{{ form.bio }}</td>
+                            <td>{{ form.bio.errors }}</td>
+                        </tr>
+                        <tr>
+                            <th rowspan="2">{{ form.avatar.label_tag }}</th>
+                            <td>
+                                <div class="avatar margin-auto"><img src="{{ profile.avatar.url }}" alt="avatar"></div>
+                            </td>
+                        </tr>
+                        {# {{ form.avatar }} #}
+                        <tr>
+                            <td><input type="file" name="avatar" accept="image/*" required="" id="id_avatar"></td>
+                        </tr>
+                    </table>
+                    {#        <input type="file" name="avatar" accept="image/*" required="" id="id_avatar">#}
+
+
+                    {#            {% for field in form %}#}
+                    {#                {{ field.label_tag }}#}
+                    {#				{{ field }}#}
+                    {#            {% endfor %}#}
+                    <input type="submit" value="Отправить">
+                </form>
+            </div>
 
 
         </div>
@@ -51,3 +98,4 @@
 {% endblock main %}
 
 {% block footer %}{% endblock footer %}
+

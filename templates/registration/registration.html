@@ -9,7 +9,7 @@
         <h2 class="margin-bottom15">Регистрация</h2>
         <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <table class="margin-auto margin-bottom15">
+            <table class="margin-auto margin-bottom15 profile-data-table">
                 <tr><th>{{ userform.username.label_tag }}</th><td>{{ userform.username }}</td></tr>
                 <tr><th>{{ userform.password1.label_tag }}</th><td>{{ userform.password1 }}</td></tr>
                 <tr><th>{{ userform.password2.label_tag }}</th><td>{{ userform.password2 }}</td></tr>

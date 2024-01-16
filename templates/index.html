@@ -10,12 +10,20 @@
         <h3 class="margin-bottom15">в Соцсеть</h3>
         <form class="margin-bottom15" action="{% url 'login' %}" method="post">
             {% csrf_token %}
-            <table class="margin-auto">
-                <tr><td>{{ form.username }}</td></tr>
-                <tr><td>{{ form.username.errors }}</td></tr>
-                <tr><td>{{ form.password }}</td></tr>
-                <tr><td>{{ form.password.errors }}</td></tr>
-            </table>
+                <table class="w250 margin-auto">
+                    <tr>
+                        <td>{{ form.username }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.username.errors }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.password }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.password.errors }}</td>
+                    </tr>
+                </table>
             <input type="submit" value="Войти">
         </form>
         <a href="{% url 'password_reset' %}"><button>Восстановить пароль</button></a>

@@ -33,7 +33,8 @@ urlpatterns = [
     path('news/', views.NewsList.as_view(), name='news'),
     path('follow/', views.FollowPeopleList.as_view(), name='followpeople'),
     path('peoplesearch/', views.peoplesearch, name='peoplesearch'),
-    path('profileupdate/', views.ProfileUpdate.as_view(), name='profileupdate'), #<slug:slug>
+    # path('profileupdate/', views.ProfileUpdate.as_view(), name='profileupdate'), #<slug:slug>
+    path('profileupdate/', views.profileupdate, name='profileupdate'),
     path('<slug:slug>/', views.profiledetail, name='profile'),
 ]
 

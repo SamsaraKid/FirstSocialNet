@@ -95,3 +95,30 @@ class PeopleSearchForm(forms.Form):
                           widget=forms.TextInput(attrs={'placeholder': 'Введите имя, фамилию или имя пользователя'}))
 
 
+class ProfileUpdate(forms.Form):
+    name = forms.CharField(label='Имя', help_text='',
+                           widget=forms.TextInput(attrs={'placeholder': 'Имя'}))
+    surname = forms.CharField(label='Фамилия', help_text='',
+                              widget=forms.TextInput(attrs={'placeholder': 'Фамилия'}))
+    secondname = forms.CharField(label='Отчество', help_text='', required=False,
+                                 widget=forms.TextInput(attrs={'placeholder': 'Отчество'}))
+    birthdate = forms.DateField(label='Дата рождения',
+                                widget=forms.SelectDateWidget(months=months,
+                                                              years=years))
+    city = forms.ModelChoiceField(label='Город', queryset=City.objects.all().order_by('name'), required=False)
+    country = forms.ModelChoiceField(label='Страна', queryset=Country.objects.all().order_by('name'), required=False)
+    city_custom = forms.CharField(label='Город', max_length=50, required=False)
+    city_custom_sign = forms.BooleanField(label='Признак нового города', required=False)
+    bio = forms.CharField(label='Информация о вас', max_length=500, required=False,
+                          widget=forms.Textarea(attrs={'placeholder': 'Максимум 500 знаков'}))
+    avatar = forms.ImageField(label='Аватар', required=False)
+
+    def clean_avatar(self):
+        avatar = self.cleaned_data.get('avatar')
+        if avatar is None:
+            return ''
+        if 'image' not in avatar.content_type:
+            raise forms.ValidationError('Неверный формат фото')
+        return avatar
+
+
