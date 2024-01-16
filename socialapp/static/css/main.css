@@ -264,18 +264,6 @@ li{
     vertical-align: middle;
 }
 
-.profile-update-table th{
-    width: 30%;
-    text-align: center;
-    vertical-align: middle;
-}
-.profile-update-table button{
-    width: 100%;
-}
-.profile-update-table .avatar{
-    width: 50%;
-}
-
 table{
     width: 100%;
     border-collapse: collapse;
