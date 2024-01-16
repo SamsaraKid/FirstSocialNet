@@ -15,14 +15,10 @@
 
         <div class="main-div">
 
-        <form method="post" novalidate>
+        <form method="post" novalidate enctype="multipart/form-data">
             {%csrf_token %}
         
             <table class="margin-auto margin-bottom15">
-                <tr><th>{{ form.username.label_tag }}</th><td>{{ form.username }}</td></tr>
-                <tr><th>{{ form.password1.label_tag }}</th><td>{{ form.password1 }}</td></tr>
-                <tr><th>{{ form.password2.label_tag }}</th><td>{{ form.password2 }}</td></tr>
-                <tr><th>{{ form.email.label_tag }}</th><td>{{ form.email }}</td></tr>
                 <tr><th>{{ form.name.label_tag }}</th><td>{{ form.name }}</td></tr>
                 <tr><th>{{ form.surname.label_tag }}</th><td>{{ form.surname }}</td></tr>
                 <tr><th>{{ form.secondname.label_tag }}</th><td>{{ form.secondname }}</td></tr>

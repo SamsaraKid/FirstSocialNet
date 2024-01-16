@@ -217,10 +217,25 @@ class FollowPeopleList(generic.ListView):
 
 class ProfileUpdate(generic.UpdateView):
     model = Profile
+    form_class = SignUp
     template_name = 'socialapp/profile_update.html'
-    fields = ['name', 'surname', 'secondname', 'city', 'birthdate', 'avatar', 'bio']
+    # fields = ['name', 'surname', 'secondname', 'city', 'birthdate', 'avatar', 'bio']
     success_url = '/'
 
     def get_object(self):
         return self.request.user.profile
+
+    def get_initial(self):
+        initial = super(ProfileUpdate, self).get_initial()
+        initial['name'] = self.request.user.profile.name
+        initial['surname'] = self.request.user.profile.surname
+        initial['secondname'] = self.request.user.profile.secondname
+        initial['city'] = self.request.user.profile.city
+        initial['birthdate'] = self.request.user.profile.birthdate
+        initial['avatar'] = self.request.user.profile.avatar
+        initial['bio'] = self.request.user.profile.bio
+        return initial
+
+
+
 

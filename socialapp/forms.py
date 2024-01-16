@@ -59,7 +59,7 @@ class SignUp(UserCreationForm):
     city_custom_sign = forms.BooleanField(label='Признак нового города', required=False)
     bio = forms.CharField(label='Информация о вас', max_length=500, required=False,
                           widget=forms.Textarea(attrs={'placeholder': 'Максимум 500 знаков'}))
-    avatar = forms.ImageField(label='Аватар')
+    avatar = forms.ImageField(label='Аватар', required=False)
 
     def clean_avatar(self):
         avatar = self.cleaned_data.get('avatar')
@@ -93,3 +93,5 @@ class PostForm(forms.Form):
 class PeopleSearchForm(forms.Form):
     query = forms.CharField(label='', max_length=500,
                           widget=forms.TextInput(attrs={'placeholder': 'Введите имя, фамилию или имя пользователя'}))
+
+
