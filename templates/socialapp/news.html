@@ -69,7 +69,7 @@
                     {% for post in post_list reversed %}
                         <div class="card-simple">
                             {% if user.username and post.user.id == user.id %}
-                                <a class="delete-button" title="Удалить пост"
+                                <a class="post-buttons" title="Удалить пост"
                                    href="{% url 'delpost' post.id %}?next={{ request.path }}">✖</a>
                             {% endif %}
                             <a class="link-inline" href="{{ post.user.profile.get_absolute_url }}">

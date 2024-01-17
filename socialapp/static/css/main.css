@@ -123,12 +123,9 @@ input[type=file]{
     margin: 10px auto;
 }
 
-.delete-button{
-    position: absolute;
-    right: 5px;
-    top: 5px;
+.post-buttons{
     font-size: small;
-    width: 20px;
+
     height: 20px;
     background-color: #ffffff;
     border-radius: 10px;
@@ -138,6 +135,19 @@ input[type=file]{
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+}
+
+.post-delete-button{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 20px;
+}
+
+.post-comment-button{
+    min-width: 20px;
+    padding: 0 5px;
+    /*width: min-content;*/
 }
 
 ul{
@@ -223,11 +233,11 @@ li{
 }
 
 .link-inline:checked{
-    color: inherit;
+    color: #e0e0e0;
 }
 
 .link-inline:hover{
-    color: #e0e0e0;
+    color: #dadada;
 }
 
 

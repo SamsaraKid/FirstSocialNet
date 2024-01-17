@@ -134,6 +134,6 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Пост комментария')
     photo = models.ForeignKey(Photo, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Фото комментария')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
-    creationdate = models.DateTimeField(verbose_name='Дата создания')
+    creationdate = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
 
 

@@ -12,6 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import datetime
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 
 def index(req):
@@ -122,6 +123,12 @@ def afterlogin(req):
 
 def profiledetail(req, slug):
     profile = Profile.objects.get(slug=slug)
+    # пагинация
+    posts = profile.user.post_set.all()
+    paginator = Paginator(posts, 10)
+    page_number = req.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    # новый пост
     postform = PostForm()
     subscribtion = False
     if req.user.username:
@@ -140,7 +147,8 @@ def profiledetail(req, slug):
             # newpost.save()
             return HttpResponseRedirect(req.path)
     return render(req, 'socialapp/profile_detail.html',
-                  context={'profile': profile, 'subscribtion': subscribtion, 'form': postform})
+                  context={'profile': profile, 'subscribtion': subscribtion,
+                           'form': postform, "page_obj": page_obj})
 
 @login_required()
 def delpost(req, id):
@@ -264,3 +272,17 @@ def profileupdate(req):
                                   'birthdate': profile.birthdate, 'city': profile.city_id, 'bio': profile.bio,
                                   'avatar': profile.avatar})
     return render(req, 'socialapp/profile_update.html', context={'form': form, 'profile': profile})
+
+
+def postcomments(req, slug, id):
+    post = Post.objects.get(id=id)
+    num_comments = post.comment_set
+    print(num_comments)
+    comment_form = PostForm()
+    if req.POST:
+        comment_form = PostForm(req.POST)
+        if comment_form.is_valid():
+            Comment.objects.create(text=comment_form.cleaned_data['text'],
+                                   post=post,
+                                   user=req.user)
+    return render(req, 'socialapp/post_comments.html', context={'post': post, 'form': comment_form})

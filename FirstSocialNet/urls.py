@@ -35,6 +35,7 @@ urlpatterns = [
     path('peoplesearch/', views.peoplesearch, name='peoplesearch'),
     # path('profileupdate/', views.ProfileUpdate.as_view(), name='profileupdate'), #<slug:slug>
     path('profileupdate/', views.profileupdate, name='profileupdate'),
+    path('<slug:slug>/post<int:id>/', views.postcomments, name='postcomments'),
     path('<slug:slug>/', views.profiledetail, name='profile'),
 ]
 
