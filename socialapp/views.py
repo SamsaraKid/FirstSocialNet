@@ -247,9 +247,7 @@ def profileupdate(req):
             profile.secondname = form.cleaned_data.get('secondname')
             profile.name = form.cleaned_data.get('name')
             profile.birthdate = form.cleaned_data.get('birthdate')
-            print(form.cleaned_data.get('city_custom_sign'))
             if form.cleaned_data.get('city_custom_sign'):
-                print('new city')
                 new_city = City.objects.create(country=form.cleaned_data.get('country'),
                                                name=form.cleaned_data.get('city_custom'),
                                                add_by_user=True)
