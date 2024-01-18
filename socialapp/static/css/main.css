@@ -125,11 +125,11 @@ input[type=file]{
 
 .post-buttons{
     font-size: small;
-
     height: 20px;
     background-color: #ffffff;
     border-radius: 10px;
     text-align: center;
+    /*vertical-align: middle;*/
     text-decoration: none;
     color: black;
     display: flex;
@@ -152,6 +152,7 @@ input[type=file]{
 
 ul{
     padding: 0;
+    margin-top: 0;
 }
 
 li{
@@ -169,6 +170,10 @@ li{
 
 .margin-auto{
     margin: auto;
+}
+
+.margin-top10{
+    margin-top: 10px;
 }
 
 .margin-bottom15{
@@ -189,7 +194,7 @@ li{
 }
 
 .flex-row{
-    margin-top: 0;
+    /*margin-top: 0;*/
     margin-bottom: 0;
     display: flex;
     flex-direction: row;

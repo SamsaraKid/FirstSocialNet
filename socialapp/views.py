@@ -153,7 +153,11 @@ def profiledetail(req, slug):
 @login_required()
 def delpost(req, id):
     prev_page = req.GET.get('next') if req.GET.get('next') is not None else ''
-    Post.objects.get(id=id).delete()
+    post = Post.objects.get(id=id)
+    print(post.photo.all()[0].link.storage)
+    print(post.photo.all()[0].link.path)
+    post.photo.all().delete()
+    post.delete()
     return redirect(prev_page) if prev_page else redirect('home')
     # return redirect('../')
 
@@ -165,21 +169,14 @@ def subscribe(req):
         profile_id = req.POST.get('profile_id')
         user = Profile.objects.get(user_id=user_id)
         profile = Profile.objects.get(user_id=profile_id)
-        user.following.add(profile)
-        print('Подписка оформлена')
+        print(user.following.values_list)
+        if profile in user.following.all():
+            user.following.remove(profile)
+            print('Подписка отменена')
+        else:
+            user.following.add(profile)
+            print('Подписка оформлена')
         return JsonResponse({'mes': 'Подписка оформлена', 'link': ''})
-
-
-@method_decorator(csrf_exempt, name='dispatch')
-def unsubscribe(req):
-    if req.POST:
-        user_id = req.POST.get('user_id')
-        profile_id = req.POST.get('profile_id')
-        user = Profile.objects.get(user_id=user_id)
-        profile = Profile.objects.get(user_id=profile_id)
-        user.following.remove(profile)
-        print('Подписка отменена')
-        return JsonResponse({'mes': 'Подписка отменена', 'link': ''})
 
 
 class NewsList(generic.ListView):
@@ -276,8 +273,6 @@ def profileupdate(req):
 
 def postcomments(req, slug, id):
     post = Post.objects.get(id=id)
-    num_comments = post.comment_set
-    print(num_comments)
     comment_form = PostForm()
     if req.POST:
         comment_form = PostForm(req.POST)

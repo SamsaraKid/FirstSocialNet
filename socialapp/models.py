@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.urls import reverse
 from django.db.models.signals import post_save
+from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 import os
 from django.utils.deconstruct import deconstructible
@@ -121,12 +122,19 @@ class Photo(models.Model):
     creationdate = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
 
 
+@receiver(pre_delete, sender=Photo)
+def photo_delete(sender, instance, **kwargs):
+    # Pass false so FileField doesn't save the model.
+    instance.link.delete(False)
+
+
 class Post(models.Model):
     text = models.TextField(max_length=500, verbose_name='Текст записи')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
     community = models.ForeignKey(Community, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Размещено в сообществе')
     photo = models.ManyToManyField(Photo, verbose_name='Прикреплённые фото')
     creationdate = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+
 
 
 class Comment(models.Model):

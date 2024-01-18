@@ -173,3 +173,6 @@ p{
     width: 50%;
 }
 
+.vertical-align-mid{
+    vertical-align: top;
+}
