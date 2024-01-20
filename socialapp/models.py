@@ -135,12 +135,14 @@ class Post(models.Model):
     photo = models.ManyToManyField(Photo, verbose_name='Прикреплённые фото')
     creationdate = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
 
+    def count_comments(self):
+        return len(self.comment_set.values())
 
 
 class Comment(models.Model):
     text = models.TextField(max_length=500, verbose_name='Текст комментария')
     post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Пост комментария')
-    photo = models.ForeignKey(Photo, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Фото комментария')
+    photo = models.ManyToManyField(Photo, verbose_name='Прикреплённые фото')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
     creationdate = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
 

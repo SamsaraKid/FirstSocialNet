@@ -125,28 +125,32 @@ input[type=file]{
 
 .post-buttons{
     font-size: small;
-    height: 20px;
+    height: 25px;
     background-color: #ffffff;
-    border-radius: 10px;
+    border-radius: 12.5px;
     text-align: center;
-    /*vertical-align: middle;*/
     text-decoration: none;
     color: black;
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+    flex-direction: row;
+    /*align-items: end;*/
+    /*justify-content: space-around;*/
+}
+
+.post-buttons div{
+    height: 100%;
 }
 
 .post-delete-button{
     position: absolute;
     right: 5px;
     top: 5px;
-    width: 20px;
+    width: 25px;
 }
 
 .post-comment-button{
-    min-width: 20px;
-    padding: 0 5px;
+    min-width: 25px;
+    padding: 0 2.5px;
     /*width: min-content;*/
 }
 
@@ -269,8 +273,16 @@ li{
     color: #3d3d3d;
 }
 
+.bold-font{
+    font-weight: bold;
+}
+
 .text-align-right{
     text-align: right;
+}
+
+.vertical-align-middle{
+    vertical-align: middle;
 }
 
 .profile-data-table th{

@@ -124,13 +124,12 @@ def afterlogin(req):
 def profiledetail(req, slug):
     profile = Profile.objects.get(slug=slug)
     # пагинация
-    posts = profile.user.post_set.all()
-    paginator = Paginator(posts, 10)
+    posts = profile.user.post_set.all().order_by("-creationdate")
+    paginator = Paginator(posts, 5)
     page_number = req.GET.get("page")
     page_obj = paginator.get_page(page_number)
     # новый пост
     postform = PostForm()
-    subscribtion = False
     if req.user.username:
         subscribtion = profile in req.user.profile.following.all()
     if req.POST:
@@ -138,7 +137,7 @@ def profiledetail(req, slug):
         if postform.is_valid():
             # postphoto = req.FILES['photo']
             # file = open('media/' + req.user.username + '/wall' + )
-            newpost = Post(text=req.POST['text'], user=req.user, creationdate=datetime.datetime.now())
+            newpost = Post(text=req.POST['text'], user=req.user)
             newpost.save()
             if postform.cleaned_data['photo']:
                 photo = Photo(album='wall', user=req.user, link=postform.cleaned_data['photo'])
@@ -147,17 +146,21 @@ def profiledetail(req, slug):
             # newpost.save()
             return HttpResponseRedirect(req.path)
     return render(req, 'socialapp/profile_detail.html',
-                  context={'profile': profile, 'subscribtion': subscribtion,
-                           'form': postform, "page_obj": page_obj})
+                  context={'profile': profile,
+                           'form': postform,
+                           'page_obj': page_obj})
 
 @login_required()
-def delpost(req, id):
+def delpub(req, id, type):
     prev_page = req.GET.get('next') if req.GET.get('next') is not None else ''
-    post = Post.objects.get(id=id)
-    print(post.photo.all()[0].link.storage)
-    print(post.photo.all()[0].link.path)
-    post.photo.all().delete()
-    post.delete()
+    if type == 'post':
+        post = Post.objects.get(id=id)
+        post.photo.all().delete()
+        post.delete()
+    elif type == 'comment':
+        comment = Comment.objects.get(id=id)
+        comment.photo.all().delete()
+        comment.delete()
     return redirect(prev_page) if prev_page else redirect('home')
     # return redirect('../')
 
@@ -182,6 +185,8 @@ def subscribe(req):
 class NewsList(generic.ListView):
     model = Post
     template_name = 'socialapp/news.html'
+    paginate_by = 10
+    ordering = '-creationdate'
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -274,10 +279,25 @@ def profileupdate(req):
 def postcomments(req, slug, id):
     post = Post.objects.get(id=id)
     comment_form = PostForm()
+    # пагинация
+    num_comments_on_page = 5
+    comments = post.comment_set.all()
+    paginator = Paginator(comments, num_comments_on_page)
+    page_number = req.GET.get("page")
+    page_obj = paginator.get_page(page_number)
     if req.POST:
         comment_form = PostForm(req.POST)
         if comment_form.is_valid():
             Comment.objects.create(text=comment_form.cleaned_data['text'],
                                    post=post,
                                    user=req.user)
-    return render(req, 'socialapp/post_comments.html', context={'post': post, 'form': comment_form})
+            if len(post.comment_set.values()) % 5 == 1 and len(post.comment_set.values()) > 1:
+                num_last_page = paginator.num_pages + 1
+            else:
+                num_last_page = paginator.num_pages
+            print(req.path, paginator.num_pages)
+            return redirect(req.path + ('?page=' + str(num_last_page) if len(post.comment_set.values()) > 5 else ''))
+    return render(req, 'socialapp/post_comments.html', context={'post': post,
+                                                                'form': comment_form,
+                                                                "page_obj": page_obj})
+
