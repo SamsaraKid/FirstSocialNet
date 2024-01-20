@@ -28,6 +28,7 @@ urlpatterns = [
     path('login/', views.index, name='login'),
     # path('<slug:slug>/', views.ProfileDetail.as_view(), name='profile'),
     path('subscribe', views.subscribe, name='subscribe'),
+    path('like', views.like, name='like'),
     path('delpost/<int:id>/<str:type>', views.delpub, name='delpost'),
     path('news/', views.NewsList.as_view(), name='news'),
     path('follow/', views.FollowPeopleList.as_view(), name='followpeople'),

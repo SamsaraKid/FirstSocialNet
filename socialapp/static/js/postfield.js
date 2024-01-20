@@ -1,6 +1,7 @@
 let post = document.getElementById('id_post')
 
-window.addEventListener('load', function () {
+if (post){
+    window.addEventListener('load', function () {
     if (post.getElementsByTagName('textarea')[0].value){
        post.setAttribute('style', 'height: 20ex;')
     }})
@@ -15,16 +16,17 @@ window.addEventListener('load', function () {
 //     }
 // })
 
-post.addEventListener('click', function (){
-       post.setAttribute('style', 'height: 20ex;')
-})
+    post.addEventListener('click', function (){
+           post.setAttribute('style', 'height: 20ex;')
+    })
 
-document.addEventListener('click', (e) =>{
-    const withinBoundaries = e.composedPath().includes(post)
-    if (!withinBoundaries && !post.getElementsByTagName('textarea')[0].value) {
-		post.setAttribute('style', 'height: 4ex;')
-	}
-})
+    document.addEventListener('click', (e) =>{
+        const withinBoundaries = e.composedPath().includes(post)
+        if (!withinBoundaries && !post.getElementsByTagName('textarea')[0].value) {
+            post.setAttribute('style', 'height: 4ex;')
+        }
+    })
+}
 
 
 // кнопка выбора фото

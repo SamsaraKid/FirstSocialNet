@@ -113,6 +113,12 @@ def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
 
+@receiver(pre_delete, sender=Profile)
+def avatar_delete(sender, instance, **kwargs):
+    # Pass false so FileField doesn't save the model.
+    instance.avatar.delete(False)
+
+
 class Photo(models.Model):
     # link = models.CharField(max_length=500, verbose_name='Адрес фото')
     album = models.CharField(max_length=500, verbose_name='Альбом фото')
@@ -120,6 +126,11 @@ class Photo(models.Model):
     link = models.ImageField(upload_to=UploadToPath())
     community = models.ForeignKey(Community, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Размещено в сообществе')
     creationdate = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    like = models.ManyToManyField(User, verbose_name='Пользователи, поставившие лайк', related_name='photolikers')
+
+    def count_likes(self):
+        return len(self.like.all())
+
 
 
 @receiver(pre_delete, sender=Photo)
@@ -134,9 +145,13 @@ class Post(models.Model):
     community = models.ForeignKey(Community, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Размещено в сообществе')
     photo = models.ManyToManyField(Photo, verbose_name='Прикреплённые фото')
     creationdate = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    like = models.ManyToManyField(User, verbose_name='Пользователи, поставившие лайк', related_name='postlikers')
 
     def count_comments(self):
         return len(self.comment_set.values())
+
+    def count_likes(self):
+        return len(self.like.all())
 
 
 class Comment(models.Model):
@@ -145,5 +160,9 @@ class Comment(models.Model):
     photo = models.ManyToManyField(Photo, verbose_name='Прикреплённые фото')
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
     creationdate = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    like = models.ManyToManyField(User, verbose_name='Пользователи, поставившие лайк', related_name='commentlikers')
+
+    def count_likes(self):
+        return len(self.like.all())
 
 

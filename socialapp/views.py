@@ -128,6 +128,9 @@ def profiledetail(req, slug):
     paginator = Paginator(posts, 5)
     page_number = req.GET.get("page")
     page_obj = paginator.get_page(page_number)
+
+    print(page_obj[0].count_comments)
+    print(page_obj[0].count_likes)
     # новый пост
     postform = PostForm()
     if req.user.username:
@@ -150,6 +153,7 @@ def profiledetail(req, slug):
                            'form': postform,
                            'page_obj': page_obj})
 
+
 @login_required()
 def delpub(req, id, type):
     prev_page = req.GET.get('next') if req.GET.get('next') is not None else ''
@@ -162,8 +166,29 @@ def delpub(req, id, type):
         comment.photo.all().delete()
         comment.delete()
     return redirect(prev_page) if prev_page else redirect('home')
-    # return redirect('../')
 
+
+@method_decorator(csrf_exempt, name='dispatch')
+def like(req):
+    if req.POST:
+        type = req.POST.get('type')
+        if type == 'post':
+            model = Post
+        elif type == 'comment':
+            model = Comment
+        elif type == 'photo':
+            model = Photo
+        id = req.POST.get('id')
+        mes = ''
+        liked_object = model.objects.get(id=id)
+        if req.user in liked_object.like.all():
+            liked_object.like.remove(req.user)
+            mes = 'Лайк убран'
+        else:
+            liked_object.like.add(req.user)
+            mes = 'Лайк поставлен'
+        num_likes = liked_object.count_likes()
+        return JsonResponse({'mes': mes, 'link': '', 'num_likes': num_likes})
 
 @method_decorator(csrf_exempt, name='dispatch')
 def subscribe(req):
@@ -172,7 +197,6 @@ def subscribe(req):
         profile_id = req.POST.get('profile_id')
         user = Profile.objects.get(user_id=user_id)
         profile = Profile.objects.get(user_id=profile_id)
-        print(user.following.values_list)
         if profile in user.following.all():
             user.following.remove(profile)
             print('Подписка отменена')
@@ -266,6 +290,7 @@ def profileupdate(req):
                 profile.city = form.cleaned_data.get('city')
             profile.bio = form.cleaned_data.get('bio')
             if form.cleaned_data.get('avatar'):
+                profile.avatar.delete()
                 profile.avatar = form.cleaned_data.get('avatar')
             profile.save()
         else:
@@ -286,11 +311,16 @@ def postcomments(req, slug, id):
     page_number = req.GET.get("page")
     page_obj = paginator.get_page(page_number)
     if req.POST:
-        comment_form = PostForm(req.POST)
+        comment_form = PostForm(req.POST, req.FILES)
         if comment_form.is_valid():
-            Comment.objects.create(text=comment_form.cleaned_data['text'],
+            newcomment = Comment.objects.create(text=comment_form.cleaned_data['text'],
                                    post=post,
                                    user=req.user)
+            if comment_form.cleaned_data['photo']:
+                photo = Photo.objects.create(album='comments',
+                                             link=comment_form.cleaned_data['photo'],
+                                             user=req.user)
+                newcomment.photo.add(photo)
             if len(post.comment_set.values()) % 5 == 1 and len(post.comment_set.values()) > 1:
                 num_last_page = paginator.num_pages + 1
             else:

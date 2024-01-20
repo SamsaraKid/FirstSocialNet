@@ -117,14 +117,16 @@ input[type=file]{
     padding-right: 50px;
 }
 
-.card-simple img{
+.post-photo{
     height: 400px;
     display: block;
     margin: 10px auto;
 }
 
-.post-buttons{
+
+.post-button{
     font-size: small;
+    min-width: 25px;
     height: 25px;
     background-color: #ffffff;
     border-radius: 12.5px;
@@ -133,25 +135,40 @@ input[type=file]{
     color: black;
     display: flex;
     flex-direction: row;
-    /*align-items: end;*/
-    /*justify-content: space-around;*/
+    align-items: center;
+    margin-right: 5px;
 }
 
-.post-buttons div{
+.post-button div{
     height: 100%;
+}
+
+.post-button h3{
+    margin: 0 5px 2px 3px;
 }
 
 .post-delete-button{
     position: absolute;
-    right: 5px;
+    right: 0px;
     top: 5px;
     width: 25px;
 }
 
 .post-comment-button{
-    min-width: 25px;
     padding: 0 2.5px;
-    /*width: min-content;*/
+}
+
+.post-like-button{
+    padding: 0 2.5px;
+}
+
+.post-like-button img{
+    width: 20px;
+    height: 20px;
+}
+
+.post-like-button:hover{
+    cursor: pointer;
 }
 
 ul{
@@ -198,11 +215,9 @@ li{
 }
 
 .flex-row{
-    /*margin-top: 0;*/
     margin-bottom: 0;
     display: flex;
     flex-direction: row;
-    /*height: 100%;*/
 }
 
 .h100pc{
@@ -211,6 +226,10 @@ li{
 
 .align-items-center{
     align-items: center;
+}
+
+.align-items-end{
+    align-items: end;
 }
 
 .just-cont-spa-bet{
