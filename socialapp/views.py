@@ -128,9 +128,6 @@ def profiledetail(req, slug):
     paginator = Paginator(posts, 5)
     page_number = req.GET.get("page")
     page_obj = paginator.get_page(page_number)
-
-    print(page_obj[0].count_comments)
-    print(page_obj[0].count_likes)
     # новый пост
     postform = PostForm()
     if req.user.username:

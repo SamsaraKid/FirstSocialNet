@@ -94,6 +94,10 @@ class PeopleSearchForm(forms.Form):
     query = forms.CharField(label='', max_length=500,
                           widget=forms.TextInput(attrs={'placeholder': 'Введите имя, фамилию или имя пользователя'}))
 
+class CommunitySearchForm(forms.Form):
+    query = forms.CharField(label='', max_length=500,
+                          widget=forms.TextInput(attrs={'placeholder': 'Введите название группы'}))
+
 
 class ProfileUpdate(forms.Form):
     name = forms.CharField(label='Имя', help_text='',
