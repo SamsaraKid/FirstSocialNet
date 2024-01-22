@@ -289,6 +289,7 @@ def profileupdate(req):
             if form.cleaned_data.get('avatar'):
                 profile.avatar.delete()
                 profile.avatar = form.cleaned_data.get('avatar')
+                profile.save()
             profile.save()
         else:
             print(form.errors)

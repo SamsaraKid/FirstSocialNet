@@ -31,7 +31,8 @@ class UploadToPath(object):
 
 
 def avatar_upload_to(instance, filename):
-    return os.path.join(os.path.join(instance.user.username, 'avatar'), instance.user.username + os.path.splitext(filename)[1])
+    return os.path.join(os.path.join(instance.user.username, 'avatar'),
+                        instance.user.username + os.path.splitext(filename)[1])
 
 
 class Country(models.Model):
