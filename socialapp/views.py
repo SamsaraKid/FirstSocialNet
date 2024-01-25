@@ -95,6 +95,20 @@ def afterlogin(req):
     return HttpResponseRedirect(reverse('profile', args=[req.user.profile.slug]))
 
 
+def communitycreate(req):
+    if req.POST:
+        form = CommunityCreate(req.POST, req.FILES)
+        if form.is_valid():
+            form.save()
+            # community = Community.objects.get(form.cleaned_data.get('communityname'))
+            # community.avatar = form.cleaned_data.get('avatar')
+            # community.save()
+    else:
+        form = CommunityCreate()
+    data = {'form': form}
+    return render(req, 'registration/community_create.html', context=data)
+
+
 # class ProfileDetail(generic.edit.FormMixin, generic.DetailView):
 #     model = Profile
 #     form_class = PostForm
@@ -234,6 +248,27 @@ def peoplesearch(req):
             if profiles:
                 searchresult = True
     return render(req, 'socialapp/people.html', context={'form': form, 'profiles': profiles})
+
+@login_required()
+def communitysearch(req):
+    communities = ''
+    searchresult = False
+    form = CommunitySearchForm()
+    if req.POST:
+        form = CommunitySearchForm(req.POST)
+        if form.is_valid():
+            if len(req.POST['query'].split(' ')) > 1:
+                query = req.POST['query'].split(' ')
+                communities = Community.objects.filter(Q(name=query[0], surname=query[1]) |
+                                                  Q(name=query[1], surname=query[0]))
+            else:
+                communities = Community.objects.filter(Q(name=req.POST['query']) |
+                                                  Q(surname=req.POST['query']) |
+                                                  Q(secondname=req.POST['query']) |
+                                                  Q(slug=req.POST['query']))
+            if communities:
+                searchresult = True
+    return render(req, 'socialapp/communities.html', context={'form': form, 'communities': communities})
 
 
 class FollowPeopleList(generic.ListView):

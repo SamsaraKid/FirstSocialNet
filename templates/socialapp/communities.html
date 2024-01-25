@@ -14,11 +14,18 @@
 {% block main %}
 
         <div class="main-div">
-        <form method="post" class="margin-bottom15">
-            {% csrf_token %}
-            {{ form }}
-            <input type="submit" class="margin-auto hidden" value="Искать">
-        </form>
+            <form method="post" class="margin-bottom15">
+                {% csrf_token %}
+                {{ form }}
+                <input type="submit" class="margin-auto" value="Искать">
+            </form>
+
+            <div class="flex-row just-cont-right">
+                <a href="{% url 'communitycreate' %}">
+                    <button>Создать сообщество</button>
+                </a>
+            </div>
+
         {% for community in communities %}
             <div class="card-simple flex-row just-cont-spa-bet">
                 <a class="link-inline" href="{{ community.get_absolute_url }}">

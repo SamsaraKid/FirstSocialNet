@@ -78,6 +78,26 @@ class SignUp(UserCreationForm):
             return username
 
 
+class CommunityCreate(forms.ModelForm):
+    class Meta:
+        model = Community
+        fields = ('communityname', 'title', 'info', 'avatar', 'city')
+
+    def clean_communityname(self):
+        communityname = self.cleaned_data.get('communityname')
+        if Community.objects.filter(slug=communityname) or Profile.objects.filter(slug=communityname):
+            raise ValidationError('Выберите другое название для ссылки')
+        else:
+            return communityname
+
+    def clean_title(self):
+        title = self.cleaned_data.get('title')
+        if Community.objects.filter(slug=title):
+            raise ValidationError('Выберите другое название')
+        else:
+            return title
+
+
 class PostForm(forms.Form):
     text = forms.CharField(label='Текст поста', max_length=500,
                           widget=forms.Textarea(attrs={'placeholder': 'Напишите что-нибудь'}))

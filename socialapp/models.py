@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
@@ -34,6 +35,10 @@ def avatar_upload_to(instance, filename):
     return os.path.join(os.path.join(instance.user.username, 'avatar'),
                         instance.user.username + os.path.splitext(filename)[1])
 
+def community_avatar_upload_to(instance, filename):
+    return os.path.join('communities', os.path.join(instance.communityname, 'avatar'),
+                        instance.communityname + os.path.splitext(filename)[1])
+
 
 class Country(models.Model):
     name = models.CharField(max_length=100, verbose_name='Страна')
@@ -52,13 +57,13 @@ class City(models.Model):
 
 
 class Community(models.Model):
-    communityname = models.CharField(max_length=100, verbose_name='Название для ссылки в адресной строке [A-Za-z0-9]')
+    communityname = models.CharField(max_length=100, verbose_name='Название для ссылки')
     title = models.CharField(max_length=100, verbose_name='Название')
     info = models.TextField(max_length=500, null=True, blank=True, verbose_name='Описание')
-    avatar = models.CharField(max_length=500, null=True, blank=True, verbose_name='Аватар')
+    avatar = models.ImageField(upload_to=community_avatar_upload_to, null=True, blank=True, verbose_name='Аватар')
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Страна')
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Город')
-    creationdate = models.DateField(verbose_name='Дата создания')
+    creationdate = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     members = models.ManyToManyField(User, through='Membership', through_fields=('community', 'user'))
     slug = models.SlugField(unique=True, default=None, verbose_name='URL')
 

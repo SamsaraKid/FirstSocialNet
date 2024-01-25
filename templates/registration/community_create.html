@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ profile.name }} {{ profile.surname }}{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock css %}
+{% block script %}
+    <script src="{% static 'js/subscribe.js' %}" defer></script>
+    <script src="{% static 'js/postfield.js' %}" defer></script>
+    <script src="{% static 'js/registration.js' %}" defer></script>
+{% endblock script %}
+
+
+{% block main %}
+
+        <div class="main-div">
+
+            <div class="text-center card-simple">
+                <form method="post" novalidate enctype="multipart/form-data">
+                    {% csrf_token %}
+{#                    <table>#}
+{#                        {{ form.as_table }}#}
+{#                    </table>#}
+                    <table class="margin-auto margin-bottom15 profile-update-table">
+                        <tr>
+                            <th>{{ form.communityname.label_tag }}</th>
+                            <td>{{ form.communityname }}</td>
+                        </tr>
+                        <tr><th></th><td>{{ form.communityname.errors }}</td></tr>
+                        <tr>
+                            <th>{{ form.title.label_tag }}</th>
+                            <td>{{ form.title }}</td>
+                        </tr>
+                        <tr><th></th><td>{{ form.title.errors }}</td></tr>
+                        <tr>
+                            <th>{{ form.info.label_tag }}</th>
+                            <td>{{ form.info }}</td>
+                        </tr>
+                        <tr><th></th><td>{{ form.info.errors }}</td></tr>
+                        <tr>
+                            <th>{{ form.city.label_tag }}</th>
+                            <td>{{ form.city }}</td>
+                            <tr><th></th><td>{{ form.city.errors }}</td></tr>
+                        </tr>
+                            <th>{{ form.avatar.label_tag }}</th>
+                            <td>{{ form.avatar }}</td>
+                        <tr><th></th><td>{{ form.avatar.errors }}</td></tr>
+                        </tr>
+                    </table>
+                    <input type="submit" value="Создать сообщество">
+                </form>
+            </div>
+
+
+        </div>
+
+
+
+
+{% endblock main %}
+
+{% block footer %}{% endblock footer %}
+

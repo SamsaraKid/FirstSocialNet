@@ -18,7 +18,7 @@
                 <li><a href="{% url 'home' %}" class="link-clean"><h2>СОЦСЕТЬ</h2></a></li>
                 {% if user.username %}
                     <li><a href="{% url 'peoplesearch' %}" class="link-clean"><p>люди</p></a></li>
-                    <li><a href="{% url 'home' %}" class="link-clean"><p>сообщества</p></a></li>
+                    <li><a href="{% url 'communitysearch' %}" class="link-clean"><p>сообщества</p></a></li>
                     <li><a href="{% url 'logout' %}" class="link-clean"><p>выйти</p></a></li>
                 {% endif %}
             </ul>
