@@ -2,13 +2,23 @@ let sub_but = document.getElementById('subscribe-button')
 if (sub_but){sub_but.onclick = f1}
 
 function f1(){
-    let user_id = document.getElementById('user_id').textContent
-    let profile_id = document.getElementById('profile_id').textContent
-    if (user_id&&profile_id){
+    let profile_id = document.getElementById('profile_id')
+    let community_id = document.getElementById('community_id')
+    let object_id = ''
+    let type = ''
+    console.log('f1')
+    if (profile_id){
+        object_id = profile_id.textContent
+        type = 'profile'
+    } else if (community_id){
+        object_id = community_id.textContent
+        type = 'community'
+    }
+    if (object_id){
         let url = '/subscribe'
         $.ajax(url, {
             method: 'POST',
-            data: {'user_id': user_id, 'profile_id': profile_id},
+            data: {'object_id': object_id, 'type': type},
             success: function (responce){
                 console.log(responce.mes)},
             error: function (responce){

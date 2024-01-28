@@ -99,10 +99,9 @@ def communitycreate(req):
     if req.POST:
         form = CommunityCreate(req.POST, req.FILES)
         if form.is_valid():
-            form.save()
-            # community = Community.objects.get(form.cleaned_data.get('communityname'))
-            # community.avatar = form.cleaned_data.get('avatar')
-            # community.save()
+            community = form.save()
+            community.members.add(req.user, through_defaults={"role": 1})
+            return HttpResponseRedirect(reverse('profile', args=[community.slug]))
     else:
         form = CommunityCreate()
     data = {'form': form}
@@ -135,6 +134,16 @@ def communitycreate(req):
 #         return super(ProfileDetail, self).form_valid(form)
 
 
+def choisebyslug(req, slug):
+    if Profile.objects.filter(slug=slug):
+        obj = Profile.objects.get(slug=slug)
+        page = profiledetail(req, slug)
+    elif Community.objects.filter(slug=slug):
+        obj = Community.objects.get(slug=slug)
+        page = communitydetail(req, slug)
+    return page
+
+
 def profiledetail(req, slug):
     profile = Profile.objects.get(slug=slug)
     # пагинация
@@ -163,6 +172,35 @@ def profiledetail(req, slug):
                   context={'profile': profile,
                            'form': postform,
                            'page_obj': page_obj})
+
+
+def communitydetail(req, slug):
+    community = Community.objects.get(slug=slug)
+    # пагинация
+    posts = community.post_set.all().order_by("-creationdate")
+    paginator = Paginator(posts, 5)
+    page_number = req.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    # новый пост
+    postform = PostForm()
+    if req.POST:
+        postform = PostForm(req.POST, req.FILES)
+        if postform.is_valid():
+            # postphoto = req.FILES['photo']
+            # file = open('media/' + req.user.username + '/wall' + )
+            newpost = Post(text=req.POST['text'], user=req.user, community=community)
+            newpost.save()
+            if postform.cleaned_data['photo']:
+                photo = Photo(album='wall', user=req.user, link=postform.cleaned_data['photo'], community=community)
+                photo.save()
+                newpost.photo.add(photo)
+            # newpost.save()
+            return HttpResponseRedirect(req.path)
+    return render(req, 'socialapp/community_detail.html',
+                  context={'community': community,}
+                           # 'form': postform,
+                           # 'page_obj': page_obj}
+                          )
 
 
 @login_required()
@@ -204,16 +242,25 @@ def like(req):
 @method_decorator(csrf_exempt, name='dispatch')
 def subscribe(req):
     if req.POST:
-        user_id = req.POST.get('user_id')
-        profile_id = req.POST.get('profile_id')
-        user = Profile.objects.get(user_id=user_id)
-        profile = Profile.objects.get(user_id=profile_id)
-        if profile in user.following.all():
-            user.following.remove(profile)
-            print('Подписка отменена')
-        else:
-            user.following.add(profile)
-            print('Подписка оформлена')
+        object_id = req.POST.get('object_id')
+        type = req.POST.get('type')
+        user = Profile.objects.get(user_id=req.user.id)
+        if type == 'profile':
+            object = Profile.objects.get(user_id=object_id)
+            if object in user.following.all():
+                user.following.remove(object)
+                print('Подписка на пользователя отменена')
+            else:
+                user.following.add(object)
+                print('Подписка на пользователя оформлена')
+        elif type == 'community':
+            object = Community.objects.get(id=object_id)
+            if req.user in object.members.all():
+                object.members.remove(req.user)
+                print('Подписка на сообщество отменена')
+            else:
+                object.members.add(req.user, through_defaults={"role": 0})
+                print('Подписка на сообщество оформлена')
         return JsonResponse({'mes': 'Подписка оформлена', 'link': ''})
 
 

@@ -23,7 +23,6 @@
                                     {% if profile in user.profile.following.all %}button-inverted{% endif %}">
                                     {% if profile in user.profile.following.all %}Отписаться{% else %}Подписаться{% endif %}
                                 </button>
-                            <div id="user_id" hidden>{{ user.id }}</div>
                             <div id="profile_id" hidden>{{ profile.user_id }}</div>
                         {% endif %}
                     {% endif %}
