@@ -176,6 +176,7 @@ def profiledetail(req, slug):
 
 def communitydetail(req, slug):
     community = Community.objects.get(slug=slug)
+    youareadmin = req.user in community.members.all()
     # пагинация
     posts = community.post_set.all().order_by("-creationdate")
     paginator = Paginator(posts, 5)
@@ -197,10 +198,11 @@ def communitydetail(req, slug):
             # newpost.save()
             return HttpResponseRedirect(req.path)
     return render(req, 'socialapp/community_detail.html',
-                  context={'community': community,}
-                           # 'form': postform,
-                           # 'page_obj': page_obj}
-                          )
+                  context={'community': community,
+                           'youareadmin': youareadmin,
+                           'form': postform,
+                           'page_obj': page_obj
+                           })
 
 
 @login_required()

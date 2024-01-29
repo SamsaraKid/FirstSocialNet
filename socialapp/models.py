@@ -75,7 +75,7 @@ class Community(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('community_detail', kwargs={'slug': self.slug})
+        return reverse('profile', kwargs={'slug': self.slug})
 
 
 class Membership(models.Model):
