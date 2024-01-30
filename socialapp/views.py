@@ -13,6 +13,7 @@ from django.http import JsonResponse
 import datetime
 from django.db.models import Q
 from django.core.paginator import Paginator
+import random
 
 
 def index(req):
@@ -176,7 +177,11 @@ def profiledetail(req, slug):
 
 def communitydetail(req, slug):
     community = Community.objects.get(slug=slug)
-    youareadmin = req.user in community.members.all()
+    youareadmin = bool(community.membership_set.filter(role=1, user_id=req.user.id))
+    # рандомные пользователи
+    num_random_members = 10 if community.members.count() >= 10 else community.members.count()
+    id_list = community.members.values_list('id', flat=True)
+    random_members = User.objects.filter(id__in=random.sample(list(id_list), num_random_members)).order_by('?')
     # пагинация
     posts = community.post_set.all().order_by("-creationdate")
     paginator = Paginator(posts, 5)
@@ -189,7 +194,10 @@ def communitydetail(req, slug):
         if postform.is_valid():
             # postphoto = req.FILES['photo']
             # file = open('media/' + req.user.username + '/wall' + )
-            newpost = Post(text=req.POST['text'], user=req.user, community=community)
+            # print(req.POST['from_community'])
+            print(postform.cleaned_data['from_community'])
+            newpost = Post(text=postform.cleaned_data['text'], user=req.user, community=community,
+                           from_community=postform.cleaned_data['from_community'])
             newpost.save()
             if postform.cleaned_data['photo']:
                 photo = Photo(album='wall', user=req.user, link=postform.cleaned_data['photo'], community=community)
@@ -201,7 +209,8 @@ def communitydetail(req, slug):
                   context={'community': community,
                            'youareadmin': youareadmin,
                            'form': postform,
-                           'page_obj': page_obj
+                           'page_obj': page_obj,
+                           'random_members': random_members,
                            })
 
 
@@ -386,6 +395,9 @@ def profileupdate(req):
 def postcomments(req, slug, id):
     post = Post.objects.get(id=id)
     comment_form = PostForm()
+    youareadmin = False
+    if post.community:
+        youareadmin = bool(post.community.membership_set.filter(role=1, user_id=req.user.id))
     # пагинация
     num_comments_on_page = 5
     comments = post.comment_set.all()
@@ -396,8 +408,9 @@ def postcomments(req, slug, id):
         comment_form = PostForm(req.POST, req.FILES)
         if comment_form.is_valid():
             newcomment = Comment.objects.create(text=comment_form.cleaned_data['text'],
-                                   post=post,
-                                   user=req.user)
+                                                post=post,
+                                                user=req.user,
+                                                from_community=comment_form.cleaned_data['from_community'])
             if comment_form.cleaned_data['photo']:
                 photo = Photo.objects.create(album='comments',
                                              link=comment_form.cleaned_data['photo'],
@@ -411,5 +424,6 @@ def postcomments(req, slug, id):
             return redirect(req.path + ('?page=' + str(num_last_page) if len(post.comment_set.values()) > 5 else ''))
     return render(req, 'socialapp/post_comments.html', context={'post': post,
                                                                 'form': comment_form,
-                                                                "page_obj": page_obj})
+                                                                "page_obj": page_obj,
+                                                                'youareadmin': youareadmin})
 

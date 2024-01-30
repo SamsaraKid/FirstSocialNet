@@ -215,9 +215,15 @@ li{
 }
 
 .flex-row{
-    margin-bottom: 0;
+    /*margin-bottom: 0;*/
     display: flex;
     flex-direction: row;
+}
+
+.flex-col{
+    /*margin-bottom: 0;*/
+    display: flex;
+    flex-direction: column;
 }
 
 .h100pc{
@@ -242,6 +248,14 @@ li{
 
 .just-cont-right{
     justify-content: end;
+}
+
+.margin-left-auto{
+    margin-left: auto;
+}
+
+.margin-right-auto{
+    margin-right: auto;
 }
 
 .link-clean{

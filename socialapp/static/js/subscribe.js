@@ -20,7 +20,9 @@ function f1(){
             method: 'POST',
             data: {'object_id': object_id, 'type': type},
             success: function (responce){
-                console.log(responce.mes)},
+                console.log(responce.mes)
+                if (type === 'community'){
+                    location.reload()}},
             error: function (responce){
                 console.log(responce.mes)}
         })

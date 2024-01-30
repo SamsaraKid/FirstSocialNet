@@ -2,7 +2,6 @@
     aspect-ratio: 1 / 1;
     overflow: hidden;
     border-radius: 50%;
-
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -21,6 +20,42 @@
     height: 100%;
     /*height: unset;*/
     position: center;
+}
+
+.avatar-name-card-small{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 64px;
+    height: 81px;
+    font-size: small;
+    color: inherit;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    margin-left: 23px;
+}
+.avatar-name-card-small:first-child{
+    margin-left: 0;
+}
+.avatar-name-card-small:checked{
+    color: #e0e0e0;
+}
+.avatar-name-card-small:hover{
+    color: #dadada;
+}
+.avatar-name-card-small img{
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 50%;
+    object-fit: cover;
+    width: 100%;
+    position: center;
+}
+.avatar-name-card-small span {
+    text-align: center;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: clip;
 }
 
 .card-user-name{
@@ -129,7 +164,7 @@ p{
 	margin: 0;
 }
 .input-file-text {
-	width: 300px;
+	width: 200px;
 	padding: 0 10px;
 	line-height: 35px;
 	display: inline-block;

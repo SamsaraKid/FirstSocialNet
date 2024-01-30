@@ -152,6 +152,7 @@ class Post(models.Model):
     photo = models.ManyToManyField(Photo, verbose_name='Прикреплённые фото')
     creationdate = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     like = models.ManyToManyField(User, verbose_name='Пользователи, поставившие лайк', related_name='postlikers')
+    from_community = models.BooleanField(verbose_name='Пост от имени сообщества', null=True, blank=True)
 
     def count_comments(self):
         return len(self.comment_set.values())
@@ -167,6 +168,7 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
     creationdate = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     like = models.ManyToManyField(User, verbose_name='Пользователи, поставившие лайк', related_name='commentlikers')
+    from_community = models.BooleanField(verbose_name='Комментарий от имени сообщества', null=True, blank=True)
 
     def count_likes(self):
         return len(self.like.all())
