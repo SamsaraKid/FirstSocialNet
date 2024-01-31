@@ -101,7 +101,8 @@ def communitycreate(req):
         form = CommunityCreate(req.POST, req.FILES)
         if form.is_valid():
             community = form.save()
-            community.members.add(req.user, through_defaults={"role": 1})
+            community.members.add(req.user)
+            community.admins.add(req.user, through_defaults={"role": 2})
             return HttpResponseRedirect(reverse('profile', args=[community.slug]))
     else:
         form = CommunityCreate()
@@ -177,7 +178,7 @@ def profiledetail(req, slug):
 
 def communitydetail(req, slug):
     community = Community.objects.get(slug=slug)
-    youareadmin = bool(community.membership_set.filter(role=1, user_id=req.user.id))
+    # youareadmin = bool(community.membership_set.filter(role=1, user_id=req.user.id))
     # рандомные пользователи
     num_random_members = 10 if community.members.count() >= 10 else community.members.count()
     id_list = community.members.values_list('id', flat=True)
@@ -203,15 +204,23 @@ def communitydetail(req, slug):
                 photo = Photo(album='wall', user=req.user, link=postform.cleaned_data['photo'], community=community)
                 photo.save()
                 newpost.photo.add(photo)
-            # newpost.save()
             return HttpResponseRedirect(req.path)
     return render(req, 'socialapp/community_detail.html',
                   context={'community': community,
-                           'youareadmin': youareadmin,
+                           # 'youareadmin': youareadmin,
                            'form': postform,
                            'page_obj': page_obj,
                            'random_members': random_members,
                            })
+
+
+def communitymembers(req, slug):
+    community = Community.objects.get(slug=slug)
+    # пагинация
+    members = community.members.all().order_by('communityadminstration__role')
+    paginator = Paginator(members, 10)
+    page_number = req.GET.get("page")
+    page_obj = paginator.get_page(page_number)
 
 
 @login_required()
@@ -315,15 +324,8 @@ def communitysearch(req):
     if req.POST:
         form = CommunitySearchForm(req.POST)
         if form.is_valid():
-            if len(req.POST['query'].split(' ')) > 1:
-                query = req.POST['query'].split(' ')
-                communities = Community.objects.filter(Q(name=query[0], surname=query[1]) |
-                                                  Q(name=query[1], surname=query[0]))
-            else:
-                communities = Community.objects.filter(Q(name=req.POST['query']) |
-                                                  Q(surname=req.POST['query']) |
-                                                  Q(secondname=req.POST['query']) |
-                                                  Q(slug=req.POST['query']))
+            communities = Community.objects.annotate(lowertitle=title.lower()).filter(Q(lowertitle__contains=req.POST['query'].lower()) |
+                                                   Q(communityname__icontains=req.POST['query']))
             if communities:
                 searchresult = True
     return render(req, 'socialapp/communities.html', context={'form': form, 'communities': communities})

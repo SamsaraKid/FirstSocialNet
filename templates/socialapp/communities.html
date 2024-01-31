@@ -20,7 +20,7 @@
                 <input type="submit" class="margin-auto" value="Искать">
             </form>
 
-            <div class="flex-row just-cont-right">
+            <div class="flex-row just-cont-right margin-bottom15">
                 <a href="{% url 'communitycreate' %}">
                     <button>Создать сообщество</button>
                 </a>
@@ -32,8 +32,8 @@
                     <div class="avatar-small"><img src="{{ community.avatar.url }}" alt="avatar">
                     </div>
                     <div class="card-user-name">
-                        <div>{{ community.name }} {{ community.surname }}</div>
-                        <div>({{ community.slug }})</div>
+                        <div>{{ community.title }}</div>
+                        <div>({{ community.communityname }})</div>
                     </div>
                 </a>
                 <div class="card-info">
