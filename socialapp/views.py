@@ -1,4 +1,5 @@
 from django.contrib.auth.forms import AuthenticationForm
+from django.db.models.functions import Lower
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from .models import *
 from .forms import *
@@ -305,7 +306,9 @@ def peoplesearch(req):
         if form.is_valid():
             if len(req.POST['query'].split(' ')) > 1:
                 query = req.POST['query'].split(' ')
-                profiles = Profile.objects.filter(Q(name=query[0], surname=query[1]) |
+                profiles = Profile.objects.annotate(lowername=Lower("name"),
+                                                    lowersurname=Lower("surname"),
+                                                    lowersecondname=Lower("secondname"),).filter(Q(name=query[0], surname=query[1]) |
                                                   Q(name=query[1], surname=query[0]))
             else:
                 profiles = Profile.objects.filter(Q(name=req.POST['query']) |
@@ -324,8 +327,10 @@ def communitysearch(req):
     if req.POST:
         form = CommunitySearchForm(req.POST)
         if form.is_valid():
-            communities = Community.objects.annotate(lowertitle=title.lower()).filter(Q(lowertitle__contains=req.POST['query'].lower()) |
-                                                   Q(communityname__icontains=req.POST['query']))
+            print(Community.objects.annotate(lowertitle=Lower("title")).get().lowertitle, req.POST['query'].lower())
+            communities = Community.objects.annotate(lowertitle=Lower("title"),
+                                                     lowercommunityname=Lower("communityname")).filter(Q(lowertitle__contains=req.POST['query'].lower()) |
+                                                                                                       Q(lowercommunityname__contains=req.POST['query'].lower()))
             if communities:
                 searchresult = True
     return render(req, 'socialapp/communities.html', context={'form': form, 'communities': communities})
