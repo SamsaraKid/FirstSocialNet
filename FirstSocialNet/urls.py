@@ -36,6 +36,7 @@ urlpatterns = [
     path('communitycreate/', views.communitycreate, name='communitycreate'),
     path('profileupdate/', views.profileupdate, name='profileupdate'),
     path('<slug:slug>/post<int:id>/', views.postcomments, name='postcomments'),
+    path('<slug:slug>/members/', views.communitymembers, name='communitymembers'),
     path('<slug:slug>/', views.choisebyslug, name='profile'),
     # path('<slug:slug>/', views.profiledetail, name='profile'),
 ]

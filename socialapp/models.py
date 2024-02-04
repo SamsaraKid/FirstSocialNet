@@ -105,6 +105,7 @@ class Profile(models.Model):
     following = models.ManyToManyField('self', related_name='followers', symmetrical=False, blank=True, verbose_name='Подписки')
     slug = models.SlugField(unique=True, default=None, verbose_name='URL')
 
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.user.username)
         super(Profile, self).save(*args, **kwargs)

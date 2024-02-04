@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ profile.name }} {{ profile.surname }}{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock css %}
+{% block script %}
+    <script src="{% static 'js/subscribe.js' %}" defer></script>
+    <script src="{% static 'js/postfield.js' %}" defer></script>
+{% endblock script %}
+
+{% block main %}
+
+        <div class="main-div">
+
+                <div class="line-under">
+                    <table>
+                        <tr>
+                            <th colspan="2"><h3>{{ community.title }}</h3>
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <td colspan="2"><h3>{{ community.communityname }}</h3></td>
+                        </tr>
+                    </table>
+                </div>
+            <h3 class="margin-bottom15">Подписчики:</h3>
+
+
+                    {% for one in page_obj %}
+                        <div class="card-simple flex-row just-cont-spa-bet">
+                            <a class="link-inline" href="{{ one.profile.get_absolute_url }}">
+                                <div class="avatar-small"><img src="{{ one.profile.avatar.url }}" alt="avatar"></div>
+                                <div class="card-user-name">
+                                    <div>{{ one.profile.name }} {{ one.profile.surname }}</div>
+                                    <div>({{ one.profile.slug }})</div>
+                                </div>
+                            </a>
+                            <div class="card-info">
+                                <div>Город: {{ one.profile.city }}</div>
+                                <div>Дата рождения: {{ one.profile.birthdate }}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+
+
+        </div>
+
+
+
+
+{% endblock main %}
+
+{% block footer %}{% endblock footer %}

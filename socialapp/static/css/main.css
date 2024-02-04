@@ -205,6 +205,10 @@ li{
     margin-right: 10px;
 }
 
+.padding-bottom-short{
+    padding-bottom: 10px;
+}
+
 .text-center{
     text-align: center;
 }
@@ -228,6 +232,14 @@ li{
 
 .h100pc{
     height: 100%;
+}
+
+.width-20pc{
+    width: 20%;
+}
+
+.width-70pc{
+    width: 79%;
 }
 
 .align-items-center{

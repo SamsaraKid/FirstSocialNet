@@ -181,9 +181,13 @@ def communitydetail(req, slug):
     community = Community.objects.get(slug=slug)
     # youareadmin = bool(community.membership_set.filter(role=1, user_id=req.user.id))
     # рандомные пользователи
-    num_random_members = 10 if community.members.count() >= 10 else community.members.count()
+    num_random_members = 8 if community.members.count() >= 8 else community.members.count()
     id_list = community.members.values_list('id', flat=True)
     random_members = User.objects.filter(id__in=random.sample(list(id_list), num_random_members)).order_by('?')
+    # рандомные админы
+    num_random_admins = 2 if community.admins.count() >= 2 else community.admins.count()
+    id_list = community.admins.values_list('id', flat=True)
+    random_admins = User.objects.filter(id__in=random.sample(list(id_list), num_random_admins)).order_by('?')
     # пагинация
     posts = community.post_set.all().order_by("-creationdate")
     paginator = Paginator(posts, 5)
@@ -212,16 +216,22 @@ def communitydetail(req, slug):
                            'form': postform,
                            'page_obj': page_obj,
                            'random_members': random_members,
+                           'random_admins': random_admins,
                            })
 
 
 def communitymembers(req, slug):
     community = Community.objects.get(slug=slug)
     # пагинация
-    members = community.members.all().order_by('communityadminstration__role')
-    paginator = Paginator(members, 10)
+    members = community.members.all()
+    paginator = Paginator(members, 5)
     page_number = req.GET.get("page")
     page_obj = paginator.get_page(page_number)
+    print(members)
+    return render(req, 'socialapp/members_list.html', context={"page_obj": page_obj,
+                                                               'community': community,
+                                                               'members': members})
+
 
 
 @login_required()
@@ -306,18 +316,22 @@ def peoplesearch(req):
         if form.is_valid():
             if len(req.POST['query'].split(' ')) > 1:
                 query = req.POST['query'].split(' ')
-                profiles = Profile.objects.annotate(lowername=Lower("name"),
-                                                    lowersurname=Lower("surname"),
-                                                    lowersecondname=Lower("secondname"),).filter(Q(name=query[0], surname=query[1]) |
-                                                  Q(name=query[1], surname=query[0]))
+                profiles = Profile.objects.filter(Q(name__icontains=query[0], surname__icontains=query[1]) |
+                                                  Q(name__icontains=query[1], surname__icontains=query[0]))
             else:
-                profiles = Profile.objects.filter(Q(name=req.POST['query']) |
-                                                  Q(surname=req.POST['query']) |
-                                                  Q(secondname=req.POST['query']) |
-                                                  Q(slug=req.POST['query']))
+                profiles = Profile.objects.filter(Q(name__icontains=req.POST['query']) |
+                                                  Q(surname__icontains=req.POST['query']) |
+                                                  Q(secondname__icontains=req.POST['query']) |
+                                                  Q(slug__icontains=req.POST['query']))
             if profiles:
                 searchresult = True
-    return render(req, 'socialapp/people.html', context={'form': form, 'profiles': profiles})
+
+
+    return render(req, 'socialapp/people.html', context={'form': form,
+                                                         'profiles': profiles,
+                                                         'searchresult': searchresult})
+
+
 
 @login_required()
 def communitysearch(req):
@@ -327,10 +341,8 @@ def communitysearch(req):
     if req.POST:
         form = CommunitySearchForm(req.POST)
         if form.is_valid():
-            print(Community.objects.annotate(lowertitle=Lower("title")).get().lowertitle, req.POST['query'].lower())
-            communities = Community.objects.annotate(lowertitle=Lower("title"),
-                                                     lowercommunityname=Lower("communityname")).filter(Q(lowertitle__contains=req.POST['query'].lower()) |
-                                                                                                       Q(lowercommunityname__contains=req.POST['query'].lower()))
+            communities = Community.objects.filter(Q(title__icontains=req.POST['query']) |
+                                                    Q(communityname__icontains=req.POST['query']))
             if communities:
                 searchresult = True
     return render(req, 'socialapp/communities.html', context={'form': form, 'communities': communities})
@@ -344,6 +356,7 @@ class FollowPeopleList(generic.ListView):
         qs = super().get_queryset()
         follow = self.request.user.profile.following.values('user_id')
         return qs.filter(user_id__in=follow)
+
 
 
 # class ProfileUpdate(generic.UpdateView):
@@ -402,9 +415,6 @@ def profileupdate(req):
 def postcomments(req, slug, id):
     post = Post.objects.get(id=id)
     comment_form = PostForm()
-    youareadmin = False
-    if post.community:
-        youareadmin = bool(post.community.membership_set.filter(role=1, user_id=req.user.id))
     # пагинация
     num_comments_on_page = 5
     comments = post.comment_set.all()
@@ -431,6 +441,5 @@ def postcomments(req, slug, id):
             return redirect(req.path + ('?page=' + str(num_last_page) if len(post.comment_set.values()) > 5 else ''))
     return render(req, 'socialapp/post_comments.html', context={'post': post,
                                                                 'form': comment_form,
-                                                                "page_obj": page_obj,
-                                                                'youareadmin': youareadmin})
+                                                                "page_obj": page_obj})
 
