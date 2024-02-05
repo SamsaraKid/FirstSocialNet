@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ profile.name }} {{ profile.surname }}{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock css %}
+{% block script %}
+    <script src="{% static 'js/subscribe.js' %}" defer></script>
+    <script src="{% static 'js/postfield.js' %}" defer></script>
+{% endblock script %}
+
+{% block main %}
+
+        <div class="main-div">
+
+                <div class="line-under">
+                    <table>
+                        <tr>
+                            <th colspan="2"><h3>{{ community.title }}</h3>
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <td colspan="2"><h3>{{ community.communityname }}</h3></td>
+                        </tr>
+                    </table>
+                </div>
+            <h3 class="margin-bottom15">Контакты:</h3>
+
+
+                    {% for one in page_obj %}
+                        <div class="card-simple flex-row just-cont-spa-bet">
+                            <a class="link-inline" href="{{ one.user.profile.get_absolute_url }}">
+                                <div class="avatar-small"><img src="{{ one.user.profile.avatar.url }}" alt="avatar"></div>
+                                <div class="card-user-name">
+                                    <div>{{ one.user.profile.name }} {{ one.user.profile.surname }}</div>
+                                    <div>({{ one.user.profile.slug }})</div>
+                                </div>
+                            </a>
+                            <div class="card-info">
+{#                                <div>Город: {{ one.user.profile.city }}</div>#}
+                                <div>Роль в сообществе:
+                                    {% if one.role == 0 %}
+                                        <b>Модератор</b>
+                                    {% elif one.role == 1 %}
+                                        <b>Администратор</b>
+                                    {% elif one.role == 2 %}
+                                        <b>Владелец</b>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if user in community.admins.all %}
+                                <div class="flex-col">
+                                    {% if user_role == 2 and one.role != 2 %}
+                                        <a><button>Сделать владельцем</button></a>
+                                    {% endif %}
+                                    {% if user_role == 2 and one.role == 1 %}
+                                        <a><button>Сделать администратором</button></a>
+                                    {% endif %}
+                                    {% if user_role > 0 and one.role > 0 %}
+                                        <a><button>Сделать модератором</button></a>
+                                    {% endif %}
+                                    {% if user_role == 2 and one.role == 0 %}
+                                        <a><button>Убрать из управления</button></a>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+        {% if page_obj.paginator.num_pages > 1 %}
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+        {% endif %}
+
+        </div>
+
+
+
+
+{% endblock main %}
+
+{% block footer %}{% endblock footer %}

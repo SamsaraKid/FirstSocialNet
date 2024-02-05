@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ profile.name }} {{ profile.surname }}{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock css %}
+{% block script %}
+    <script src="{% static 'js/subscribe.js' %}" defer></script>
+    <script src="{% static 'js/postfield.js' %}" defer></script>
+{% endblock script %}
+
+{% block main %}
+
+        <div class="main-div">
+                    <h3 class="margin-bottom15">Список сообществ</h3>
+
+
+                    {% for one in communities %}
+                        {% if not one %}
+                        текст
+                        {% else %}
+                        <div class="card-simple flex-row just-cont-spa-bet">
+                            <a class="link-inline" href="{{ one.get_absolute_url }}">
+                                <div class="avatar-small"><img src="{{ one.avatar.url }}" alt="avatar"></div>
+                                <div class="card-user-name">
+                                    <div>{{ one.title }}</div>
+                                    <div>({{ one.slug }})</div>
+                                </div>
+                            </a>
+                            <div class="card-info">
+                                <div>Город: {{ one.city }}</div>
+                                <div>Роль в сообществе:
+                                    <b>{% if user in one.members.all %}
+                                        Подписчик
+                                    {% endif %}
+                                        {% if user in one.members.all and user in one.admins.all %}
+                                            /
+                                        {% endif %}
+                                        {% if user in one.admins.all %}
+                                            Управление
+                                        {% endif %}</b>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+
+
+        </div>
+
+
+
+
+{% endblock main %}
+
+{% block footer %}{% endblock footer %}

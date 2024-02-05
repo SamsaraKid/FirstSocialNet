@@ -288,6 +288,7 @@ li{
 
 .link-inline{
     color: inherit;
+    text-decoration: none;
 }
 
 .link-inline:checked{

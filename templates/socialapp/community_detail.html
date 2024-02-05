@@ -64,7 +64,9 @@
                         </div>
                     </div>
                     <div class="width-20pc card-simple">
-                        <div class="margin-bottom15">Контакты ({{ community.admins.count }})</div>
+                        <a class="link-inline" href="{% url 'communityadmins' community.slug %}">
+                            <div class="margin-bottom15">Контакты ({{ community.admins.count }})</div>
+                        </a>
                         <div class="flex-row margin-bottom15">
                             {% for one in random_admins %}
                                 <a class="avatar-name-card-small" href="{{ one.profile.get_absolute_url }}">
@@ -172,6 +174,7 @@
                 {% endif %}
             </div>
 
+            {% if page_obj.paginator.num_pages > 1 %}
         <div class="pagination">
             <span class="step-links">
                 {% if page_obj.has_previous %}
@@ -189,6 +192,7 @@
                 {% endif %}
             </span>
         </div>
+        {% endif %}
 
         </div>
 

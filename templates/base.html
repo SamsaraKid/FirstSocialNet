@@ -17,8 +17,8 @@
             <ul class="flex-row align-items-center just-cont-spa-bet h100pc">
                 <li><a href="{% url 'home' %}" class="link-clean"><h2>СОЦСЕТЬ</h2></a></li>
                 {% if user.username %}
-                    <li><a href="{% url 'peoplesearch' %}" class="link-clean"><p>люди</p></a></li>
-                    <li><a href="{% url 'communitysearch' %}" class="link-clean"><p>сообщества</p></a></li>
+                    <li><a href="{% url 'search' 'user' %}" class="link-clean"><p>люди</p></a></li>
+                    <li><a href="{% url 'search' 'community' %}" class="link-clean"><p>сообщества</p></a></li>
                     <li><a href="{% url 'logout' %}" class="link-clean"><p>выйти</p></a></li>
                 {% endif %}
             </ul>
@@ -34,7 +34,7 @@
                         <li><a class="link-clean" href="{% url 'home' %}">Моя страница</a></li>
                         <li><a class="link-clean" href="{% url 'news' %}">Мои новости</a></li>
                         <li><a class="link-clean" href="{% url 'followpeople' %}">Мои подписки</a></li>
-                        <li><a class="link-clean" href="">Мои сообщества</a></li>
+                        <li><a class="link-clean" href="{% url 'communitylist' %}">Мои сообщества</a></li>
 {#                        <li><a class="link-clean" href="">Мои фото</a></li>#}
                         <li><a class="link-clean" href="{% url 'profileupdate'%}">Мои настройки</a></li> {# user.username #}
                     </ul>

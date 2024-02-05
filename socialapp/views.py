@@ -12,7 +12,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import datetime
-from django.db.models import Q
+from django.db.models import Q, Value, When, Case
 from django.core.paginator import Paginator
 import random
 
@@ -227,10 +227,33 @@ def communitymembers(req, slug):
     paginator = Paginator(members, 5)
     page_number = req.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    print(members)
     return render(req, 'socialapp/members_list.html', context={"page_obj": page_obj,
                                                                'community': community,
                                                                'members': members})
+
+
+def communityadmins(req, slug):
+    community = Community.objects.get(slug=slug)
+    user_role = Communityadminstration.objects.filter(community=community, user_id=req.user.id).values_list('role', flat=True)[0]
+    print(user_role)
+    # пагинация
+    # admins = community.admins.all()
+    admins = Communityadminstration.objects.filter(community=community)
+    paginator = Paginator(admins, 5)
+    page_number = req.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return render(req, 'socialapp/admins_list.html', context={"page_obj": page_obj,
+                                                               'community': community,
+                                                               'admins': admins,
+                                                               'user_role': user_role})
+
+
+@login_required()
+@method_decorator(csrf_exempt, name='dispatch')
+def changeadminstatus(req):
+    if req.POST:
+        id = req.POST.get('id')
+
 
 
 
@@ -248,6 +271,7 @@ def delpub(req, id, type):
     return redirect(prev_page) if prev_page else redirect('home')
 
 
+@login_required()
 @method_decorator(csrf_exempt, name='dispatch')
 def like(req):
     if req.POST:
@@ -306,46 +330,140 @@ class NewsList(generic.ListView):
         follow = self.request.user.profile.following.values('user_id')
         return qs.filter(user_id__in=follow) | qs.filter(user_id=self.request.user.id)
 
+# @login_required()
+# def peoplesearch(req):
+#     profiles = ''
+#     searchresult = False
+#     page_obj = ''
+#     query = ''
+#     if not req.GET:
+#         req.session['search'] = ''
+#         form = PeopleSearchForm()
+#     else:
+#         form = PeopleSearchForm(req.session['search'])
+#     if req.POST:
+#         req.session['search'] = req.POST
+#         form = PeopleSearchForm(req.session['search'])
+#     if req.session['search']:
+#         query = req.session['search']['query']
+#     if query:
+#         if len(query.split(' ')) > 1:
+#             query = query.split(' ')
+#             profiles = Profile.objects.filter(Q(name__icontains=query[0], surname__icontains=query[1]) |
+#                                               Q(name__icontains=query[1], surname__icontains=query[0]))
+#         else:
+#             profiles = Profile.objects.filter(Q(name__icontains=query) |
+#                                               Q(surname__icontains=query) |
+#                                               Q(secondname__icontains=query) |
+#                                               Q(slug__icontains=query))
+#         if profiles:
+#             searchresult = True
+#             # пагинация
+#             paginator = Paginator(profiles, 5)
+#             page_number = req.GET.get("page")
+#             page_obj = paginator.get_page(page_number)
+#     return render(req, 'socialapp/search.html', context={'form': form,
+#                                                          'profiles': profiles,
+#                                                          'searchresult': searchresult,
+#                                                          'page_obj': page_obj,
+#                                                          'query': query,
+#                                                          })
+
+# @login_required()
+# def communitysearch(req):
+#     communities = ''
+#     searchresult = False
+#     page_obj = ''
+#     query = ''
+#     if not req.GET:
+#         req.session['search'] = ''
+#         form = CommunitySearchForm()
+#     else:
+#         form = CommunitySearchForm(req.session['search'])
+#     if req.POST:
+#         req.session['search'] = req.POST
+#         form = CommunitySearchForm(req.session['search'])
+#     if req.session['search']:
+#         query = req.session['search']['query']
+#     if query:
+#         communities = Community.objects.filter(Q(title__icontains=req.POST['query']) |
+#                                                         Q(communityname__icontains=req.POST['query']))
+#         if communities:
+#             searchresult = True
+#             # пагинация
+#             paginator = Paginator(communities, 5)
+#             page_number = req.GET.get("page")
+#             page_obj = paginator.get_page(page_number)
+#     return render(req, 'socialapp/search.html', context={'form': form,
+#                                                          'communities': communities,
+#                                                          'searchresult': searchresult,
+#                                                          'page_obj': page_obj,
+#                                                          'query': query,
+#                                                          })
+    # communities = ''
+    # searchresult = False
+    # form = CommunitySearchForm()
+    # if req.POST:
+    #     form = CommunitySearchForm(req.POST)
+    #     if form.is_valid():
+    #         communities = Community.objects.filter(Q(title__icontains=req.POST['query']) |
+    #                                                 Q(communityname__icontains=req.POST['query']))
+    #         if communities:
+    #             searchresult = True
+    # return render(req, 'socialapp/DELETEcommunities.html', context={'form': form, 'communities': communities})
+
+
 @login_required()
-def peoplesearch(req):
-    profiles = ''
+def search(req, type):
+    req.session['search_type'] = type
+    if req.session['search_type'] == 'user':
+        model = Profile
+        search_form = PeopleSearchForm
+    elif req.session['search_type'] == 'community':
+        model = Community
+        search_form = CommunitySearchForm
+    result = ''
     searchresult = False
-    form = PeopleSearchForm()
+    page_obj = ''
+    query = ''
+    if not req.GET:
+        req.session['search'] = ''
+        form = search_form()
+    else:
+        form = search_form(req.session['search'])
     if req.POST:
-        form = PeopleSearchForm(req.POST)
-        if form.is_valid():
-            if len(req.POST['query'].split(' ')) > 1:
-                query = req.POST['query'].split(' ')
-                profiles = Profile.objects.filter(Q(name__icontains=query[0], surname__icontains=query[1]) |
+        req.session['search'] = req.POST
+        form = search_form(req.session['search'])
+    if req.session['search']:
+        query = req.session['search']['query']
+    if query:
+        if req.session['search_type'] == 'user':
+            if len(query.split(' ')) > 1:
+                query = query.split(' ')
+                result = model.objects.filter(Q(name__icontains=query[0], surname__icontains=query[1]) |
                                                   Q(name__icontains=query[1], surname__icontains=query[0]))
             else:
-                profiles = Profile.objects.filter(Q(name__icontains=req.POST['query']) |
-                                                  Q(surname__icontains=req.POST['query']) |
-                                                  Q(secondname__icontains=req.POST['query']) |
-                                                  Q(slug__icontains=req.POST['query']))
-            if profiles:
-                searchresult = True
+                result = model.objects.filter(Q(name__icontains=query) |
+                                                  Q(surname__icontains=query) |
+                                                  Q(secondname__icontains=query) |
+                                                  Q(slug__icontains=query))
+        elif req.session['search_type'] == 'community':
+            result = model.objects.filter(Q(title__icontains=req.POST['query']) |
+                                                   Q(communityname__icontains=req.POST['query']))
+        if result:
+            searchresult = True
+            # пагинация
+            paginator = Paginator(result, 5)
+            page_number = req.GET.get("page")
+            page_obj = paginator.get_page(page_number)
+    return render(req, 'socialapp/search.html', context={'form': form,
+                                                         'result': result,
+                                                         'searchresult': searchresult,
+                                                         'page_obj': page_obj,
+                                                         'query': query,
+                                                         'type': req.session['search_type']
+                                                         })
 
-
-    return render(req, 'socialapp/people.html', context={'form': form,
-                                                         'profiles': profiles,
-                                                         'searchresult': searchresult})
-
-
-
-@login_required()
-def communitysearch(req):
-    communities = ''
-    searchresult = False
-    form = CommunitySearchForm()
-    if req.POST:
-        form = CommunitySearchForm(req.POST)
-        if form.is_valid():
-            communities = Community.objects.filter(Q(title__icontains=req.POST['query']) |
-                                                    Q(communityname__icontains=req.POST['query']))
-            if communities:
-                searchresult = True
-    return render(req, 'socialapp/communities.html', context={'form': form, 'communities': communities})
 
 
 class FollowPeopleList(generic.ListView):
@@ -356,6 +474,14 @@ class FollowPeopleList(generic.ListView):
         qs = super().get_queryset()
         follow = self.request.user.profile.following.values('user_id')
         return qs.filter(user_id__in=follow)
+
+
+
+def communitylist(req):
+    subscriber = req.user.member.all()
+    admin = req.user.admin.all()
+    queryset = admin.union(subscriber)
+    return render(req, 'socialapp/follow_community_list.html', context={'communities': queryset})
 
 
 

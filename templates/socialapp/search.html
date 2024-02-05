@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ profile.name }} {{ profile.surname }}{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/search.css' %}">
+{% endblock css %}
+{% block script %}
+    <script src="{% static 'js/subscribe.js' %}" defer></script>
+    <script src="{% static 'js/postfield.js' %}" defer></script>
+{% endblock script %}
+
+
+{% block main %}
+
+        <div class="main-div">
+        <form method="POST" class="margin-bottom15">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" class="margin-auto hidden" value="Искать">
+        </form>
+
+        {% if type == 'community' and not query %}
+        <div class="flex-row just-cont-right margin-bottom15">
+            <a href="{% url 'communitycreate' %}">
+                <button>Создать сообщество</button>
+            </a>
+        </div>
+        {% endif %}
+
+{#        <div class="main-div">#}
+{#        <form method="POST" action="{% url 'peoplesearchresult' %}" class="margin-bottom15">#}
+{#            {% csrf_token %}#}
+{#            {{ form }}#}
+{#            <input type="submit" class="margin-auto hidden" value="Искать">#}
+{#        </form>#}
+
+        {% if query and searchresult %}
+{#        {% for profile in page_obj %}#}
+{#            <div class="card-simple flex-row just-cont-spa-bet">#}
+{#                <a class="link-inline" href="{{ profile.get_absolute_url }}">#}
+{#                    <div class="avatar-small"><img src="{{ profile.avatar.url }}" alt="avatar">#}
+{#                    </div>#}
+{#                    <div class="card-user-name">#}
+{#                        <div>{{ profile.name }} {{ profile.surname }}</div>#}
+{#                        <div>({{ profile.slug }})</div>#}
+{#                    </div>#}
+{#                </a>#}
+{#                <div class="card-info">#}
+{#                    <div>Город: {{ profile.city }}</div>#}
+{#                    <div>Дата рождения: {{ profile.birthdate }}</div>#}
+{#                </div>#}
+{#            </div>#}
+{#        {% endfor %}#}
+            {% for one in page_obj %}
+            <div class="card-simple flex-row just-cont-spa-bet">
+                <a class="link-inline" href="{{ one.get_absolute_url }}">
+                    <div class="avatar-small"><img src="{{ one.avatar.url }}" alt="avatar">
+                    </div>
+                    <div class="card-user-name">
+                        {% if type == 'user' %}
+                            <div>{{ one.name }} {{ one.surname }}</div>
+                        {% elif type == 'community' %}
+                            <div>{{ one.title }}</div>
+                        {% endif %}
+                        <div>({{ one.slug }})</div>
+                    </div>
+                </a>
+                <div class="card-info">
+                    <div>Город: {{ one.city }}</div>
+                    {% if type == 'user' %}
+                    <div>Дата рождения: {{ one.birthdate }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+
+            {% if page_obj.paginator.num_pages > 1 %}
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+            {% endif %}
+
+        {% elif query and not searchresult %}
+            <h3>Ничего не найдено</h3>
+        {% endif %}
+
+
+
+
+        </div>
+
+
+
+
+
+{% endblock main %}
+
+{% block footer %}{% endblock footer %}

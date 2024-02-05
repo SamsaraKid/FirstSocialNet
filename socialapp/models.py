@@ -65,8 +65,8 @@ class Community(models.Model):
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Город')
     creationdate = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     # members = models.ManyToManyField(User, through='Membership', through_fields=('community', 'user'))
-    members = models.ManyToManyField(User)
-    admins = models.ManyToManyField(User, through='Communityadminstration', through_fields=('community', 'user'), related_name='admins')
+    members = models.ManyToManyField(User, related_name='member')
+    admins = models.ManyToManyField(User, through='Communityadminstration', through_fields=('community', 'user'), related_name='admin')
     slug = models.SlugField(unique=True, default=None, verbose_name='URL')
 
     def save(self, *args, **kwargs):

@@ -119,9 +119,13 @@
                             </div>
                         </div>
                     {% endfor %}
+                {% else %}
+                    <h4 class="margin-bottom15">Нет записей</h4>
                 {% endif %}
+
             </div>
 
+        {% if page_obj.paginator.num_pages > 1 %}
         <div class="pagination">
             <span class="step-links">
                 {% if page_obj.has_previous %}
@@ -139,6 +143,7 @@
                 {% endif %}
             </span>
         </div>
+        {% endif %}
 
         </div>
 
