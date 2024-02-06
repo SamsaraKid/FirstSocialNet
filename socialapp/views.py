@@ -12,7 +12,8 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import datetime
-from django.db.models import Q, Value, When, Case
+from django.db.models import Q, Value, When, Case, F, BooleanField
+from django.db.models.lookups import GreaterThan, LessThan, Exact
 from django.core.paginator import Paginator
 import random
 
@@ -234,11 +235,27 @@ def communitymembers(req, slug):
 
 def communityadmins(req, slug):
     community = Community.objects.get(slug=slug)
-    user_role = Communityadminstration.objects.filter(community=community, user_id=req.user.id).values_list('role', flat=True)[0]
-    print(user_role)
-    # пагинация
-    # admins = community.admins.all()
+    if req.user.username and Communityadminstration.objects.filter(community=community, user_id=req.user.id):
+        user_role = Communityadminstration.objects.filter(community=community,
+                                                          user_id=req.user.id).values_list('role', flat=True)[0]
+    else:
+        user_role = -1
     admins = Communityadminstration.objects.filter(community=community)
+    # права на изменение статуса управления
+    #                                                                   .annotate(make_owner=Value(False),
+    #                                                                              make_admin=Value(False),
+    #                                                                              make_moder=Value(False),
+    #                                                                              make_del=Value(False))
+    # for a in admins:
+    #     if user_role == 2 and a.role != 2:
+    #         a.make_owner = True
+    #     if user_role == 2 and a.role == 0:
+    #         a.make_admin = True
+    #     if user_role == 2 and a.role == 1:
+    #         a.make_moder = True
+    #     if user_role > a.role or req.user.id == a.user_id:
+    #         a.make_del = True
+    # пагинация
     paginator = Paginator(admins, 5)
     page_number = req.GET.get("page")
     page_obj = paginator.get_page(page_number)

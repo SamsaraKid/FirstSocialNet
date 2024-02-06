@@ -86,6 +86,14 @@ button:hover, input[type=submit]:hover{
     background-color: #e0e0e0;
 }
 
+.small-button{
+    font-size: small;
+    width: 175px;
+    height: 20px;
+    line-height: 10px;
+    border-radius: 7px;
+}
+
 input[type=file]{
     overflow: hidden;
     font-family: inherit;
@@ -205,6 +213,10 @@ li{
     margin-right: 10px;
 }
 
+.margin-left-short{
+    margin-left: 10px;
+}
+
 .padding-bottom-short{
     padding-bottom: 10px;
 }
@@ -254,11 +266,11 @@ li{
     justify-content: space-between;
 }
 
-.just-cont-left{
+.just-cont-start{
     justify-content: start;
 }
 
-.just-cont-right{
+.just-cont-end{
     justify-content: end;
 }
 

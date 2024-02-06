@@ -36,7 +36,7 @@
                                     <div>({{ one.user.profile.slug }})</div>
                                 </div>
                             </a>
-                            <div class="card-info">
+                            <div class="card-info flex-col just-cont-end">
 {#                                <div>Город: {{ one.user.profile.city }}</div>#}
                                 <div>Роль в сообществе:
                                     {% if one.role == 0 %}
@@ -47,23 +47,24 @@
                                         <b>Владелец</b>
                                     {% endif %}
                                 </div>
-                            </div>
-                            {% if user in community.admins.all %}
-                                <div class="flex-col">
+
+                            {% if user_role > -1 %}
+                                <div class="width-70pc flex-row just-cont-end">
                                     {% if user_role == 2 and one.role != 2 %}
-                                        <a><button>Сделать владельцем</button></a>
-                                    {% endif %}
-                                    {% if user_role == 2 and one.role == 1 %}
-                                        <a><button>Сделать администратором</button></a>
-                                    {% endif %}
-                                    {% if user_role > 0 and one.role > 0 %}
-                                        <a><button>Сделать модератором</button></a>
+                                        <a><button class="small-button margin-left-short">Сделать владельцем</button></a>
                                     {% endif %}
                                     {% if user_role == 2 and one.role == 0 %}
-                                        <a><button>Убрать из управления</button></a>
+                                        <a><button class="small-button margin-left-short">Сделать администратором</button></a>
+                                    {% endif %}
+                                    {% if user_role == 2 and one.role == 1 %}
+                                        <a><button class="small-button margin-left-short">Сделать модератором</button></a>
+                                    {% endif %}
+                                    {% if user_role > one.role or user.id == one.user_id  %}
+                                        <a><button class="small-button margin-left-short">Убрать из управления</button></a>
                                     {% endif %}
                                 </div>
                             {% endif %}
+                            </div>
                         </div>
                     {% endfor %}
 
