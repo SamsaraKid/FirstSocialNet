@@ -7,6 +7,7 @@
 {% block script %}
     <script src="{% static 'js/subscribe.js' %}" defer></script>
     <script src="{% static 'js/postfield.js' %}" defer></script>
+    <script src="{% static 'js/admin_status.js' %}" defer></script>
 {% endblock script %}
 
 {% block main %}
@@ -16,7 +17,7 @@
                 <div class="line-under">
                     <table>
                         <tr>
-                            <th colspan="2"><h3>{{ community.title }}</h3>
+                            <th colspan="2"><a class="link-inline" href="{{ community.get_absolute_url }}"><h3>{{ community.title }}</h3></a>
                             </th>
                         </tr>
                         <tr class="">
@@ -36,9 +37,30 @@
                                     <div>({{ one.profile.slug }})</div>
                                 </div>
                             </a>
-                            <div class="card-info">
-                                <div>Город: {{ one.profile.city }}</div>
-                                <div>Дата рождения: {{ one.profile.birthdate }}</div>
+{#                            <div class="card-info">#}
+{#                                <div>Город: {{ one.profile.city }}</div>#}
+{#                                <div>Дата рождения: {{ one.profile.birthdate }}</div>#}
+{#                            </div>#}
+                        <div class="card-info flex-col just-cont-end">
+{#                                <div>Город: {{ one.user.profile.city }}</div>#}
+                                <div>Роль в сообществе:
+                                {% if one in admins %}
+                                    <b>Управление /</b>
+                                    {% endif %}
+                                    <b>Подписчик</b>
+                                </div>
+
+                            {% if one not in admins %}
+                                <div class="width-70pc flex-row just-cont-end">
+                                    {% if user_role == 2 %}
+                                        <button onclick="change_status({{ one.id }}, {{ community.id }}, 2)" class="small-button margin-left-short">Сделать владельцем</button>
+                                        <button onclick="change_status({{ one.id }}, {{ community.id }}, 1)" class="small-button margin-left-short">Сделать администратором</button>
+                                    {% endif %}
+                                    {% if user_role > 0 %}
+                                        <button onclick="change_status({{ one.id }}, {{ community.id }}, 0)" class="small-button margin-left-short">Сделать модератором</button>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
                             </div>
                         </div>
                     {% endfor %}

@@ -12,7 +12,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import datetime
-from django.db.models import Q, Value, When, Case, F, BooleanField
+from django.db.models import Q, Value, When, Case, F, BooleanField, Exists, IntegerField, Subquery
 from django.db.models.lookups import GreaterThan, LessThan, Exact
 from django.core.paginator import Paginator
 import random
@@ -180,7 +180,11 @@ def profiledetail(req, slug):
 
 def communitydetail(req, slug):
     community = Community.objects.get(slug=slug)
-    # youareadmin = bool(community.membership_set.filter(role=1, user_id=req.user.id))
+    if req.user.username and Communityadminstration.objects.filter(community=community, user_id=req.user.id):
+        user_role = Communityadminstration.objects.filter(community=community,
+                                                          user_id=req.user.id).values_list('role', flat=True)[0]
+    else:
+        user_role = -1
     # рандомные пользователи
     num_random_members = 8 if community.members.count() >= 8 else community.members.count()
     id_list = community.members.values_list('id', flat=True)
@@ -213,7 +217,7 @@ def communitydetail(req, slug):
             return HttpResponseRedirect(req.path)
     return render(req, 'socialapp/community_detail.html',
                   context={'community': community,
-                           # 'youareadmin': youareadmin,
+                           'user_role': user_role,
                            'form': postform,
                            'page_obj': page_obj,
                            'random_members': random_members,
@@ -222,7 +226,14 @@ def communitydetail(req, slug):
 
 
 def communitymembers(req, slug):
+    form = PeopleSearchForm()
     community = Community.objects.get(slug=slug)
+    if req.user.username and Communityadminstration.objects.filter(community=community, user_id=req.user.id):
+        user_role = Communityadminstration.objects.filter(community=community,
+                                                          user_id=req.user.id).values_list('role', flat=True)[0]
+    else:
+        user_role = -1
+    admins = community.admins.all()
     # пагинация
     members = community.members.all()
     paginator = Paginator(members, 5)
@@ -230,7 +241,9 @@ def communitymembers(req, slug):
     page_obj = paginator.get_page(page_number)
     return render(req, 'socialapp/members_list.html', context={"page_obj": page_obj,
                                                                'community': community,
-                                                               'members': members})
+                                                               'members': members,
+                                                               'user_role': user_role,
+                                                               'admins': admins})
 
 
 def communityadmins(req, slug):
@@ -265,11 +278,29 @@ def communityadmins(req, slug):
                                                                'user_role': user_role})
 
 
+
 @login_required()
 @method_decorator(csrf_exempt, name='dispatch')
 def changeadminstatus(req):
     if req.POST:
-        id = req.POST.get('id')
+        user_id = req.POST.get('user_id')
+        user = User.objects.get(id=user_id)
+        community_id = req.POST.get('community_id')
+        community = Community.objects.get(id=community_id)
+        stat = int(req.POST.get('stat'))
+        admin = Community.objects.get(id=community_id).communityadminstration_set.filter(user_id=user_id)
+        print(admin)
+        if stat >= 0:
+            if admin:
+            # admin = Community.objects.get(id=community_id).communityadminstration_set.get(user_id=user_id)
+                admin[0].role = stat
+                admin[0].save()
+            else:
+                community.admins.add(user, through_defaults={"role": stat})
+        else:
+            Community.objects.get(id=community_id).admins.remove(user)
+        mes = f'Статус администратора изменён на {stat}'
+        return JsonResponse({'mes': mes, 'link': ''})
 
 
 
@@ -331,7 +362,7 @@ def subscribe(req):
                 object.members.remove(req.user)
                 print('Подписка на сообщество отменена')
             else:
-                object.members.add(req.user, through_defaults={"role": 0})
+                object.members.add(req.user)
                 print('Подписка на сообщество оформлена')
         return JsonResponse({'mes': 'Подписка оформлена', 'link': ''})
 
@@ -557,6 +588,12 @@ def profileupdate(req):
 
 def postcomments(req, slug, id):
     post = Post.objects.get(id=id)
+    community = post.community
+    if req.user.username and Communityadminstration.objects.filter(community=community, user_id=req.user.id) and community:
+        user_role = Communityadminstration.objects.filter(community=community,
+                                                          user_id=req.user.id).values_list('role', flat=True)[0]
+    else:
+        user_role = -1
     comment_form = PostForm()
     # пагинация
     num_comments_on_page = 5
@@ -584,5 +621,6 @@ def postcomments(req, slug, id):
             return redirect(req.path + ('?page=' + str(num_last_page) if len(post.comment_set.values()) > 5 else ''))
     return render(req, 'socialapp/post_comments.html', context={'post': post,
                                                                 'form': comment_form,
-                                                                "page_obj": page_obj})
+                                                                "page_obj": page_obj,
+                                                                'user_role': user_role})
 

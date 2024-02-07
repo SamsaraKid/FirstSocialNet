@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% csrf_token %}
 {% block title %}{{ profile.name }} {{ profile.surname }}{% endblock title %}
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
@@ -7,6 +8,7 @@
 {% block script %}
     <script src="{% static 'js/subscribe.js' %}" defer></script>
     <script src="{% static 'js/postfield.js' %}" defer></script>
+    <script src="{% static 'js/admin_status.js' %}" defer></script>
 {% endblock script %}
 
 {% block main %}
@@ -16,7 +18,7 @@
                 <div class="line-under">
                     <table>
                         <tr>
-                            <th colspan="2"><h3>{{ community.title }}</h3>
+                            <th colspan="2"><a class="link-inline" href="{{ community.get_absolute_url }}"><h3>{{ community.title }}</h3></a>
                             </th>
                         </tr>
                         <tr class="">
@@ -24,7 +26,7 @@
                         </tr>
                     </table>
                 </div>
-            <h3 class="margin-bottom15">Контакты:</h3>
+            <h3 class="margin-bottom15">Управление:</h3>
 
 
                     {% for one in page_obj %}
@@ -45,22 +47,24 @@
                                         <b>Администратор</b>
                                     {% elif one.role == 2 %}
                                         <b>Владелец</b>
+                                    {% else %}
+                                        <b>Подписчик</b>
                                     {% endif %}
                                 </div>
 
                             {% if user_role > -1 %}
                                 <div class="width-70pc flex-row just-cont-end">
                                     {% if user_role == 2 and one.role != 2 %}
-                                        <a><button class="small-button margin-left-short">Сделать владельцем</button></a>
+                                        <button onclick="change_status({{ one.user.id }}, {{ community.id }}, 2)" class="small-button margin-left-short">Сделать владельцем</button>
                                     {% endif %}
                                     {% if user_role == 2 and one.role == 0 %}
-                                        <a><button class="small-button margin-left-short">Сделать администратором</button></a>
+                                        <button onclick="change_status({{ one.user.id }}, {{ community.id }}, 1)"class="small-button margin-left-short">Сделать администратором</button>
                                     {% endif %}
                                     {% if user_role == 2 and one.role == 1 %}
-                                        <a><button class="small-button margin-left-short">Сделать модератором</button></a>
+                                        <button onclick="change_status({{ one.user.id }}, {{ community.id }}, 0)"class="small-button margin-left-short">Сделать модератором</button>
                                     {% endif %}
                                     {% if user_role > one.role or user.id == one.user_id  %}
-                                        <a><button class="small-button margin-left-short">Убрать из управления</button></a>
+                                        <button onclick="change_status({{ one.user.id }}, {{ community.id }}, -1)"class="small-button margin-left-short">Убрать из управления</button>
                                     {% endif %}
                                 </div>
                             {% endif %}

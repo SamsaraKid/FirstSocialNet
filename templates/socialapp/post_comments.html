@@ -89,7 +89,7 @@
                                         <span class="input-file-btn">Выберите фото</span>
                                         <span class="input-file-text"></span>
                                     </label>  {# {{ form.photo }} #}
-                                    {% if user in post.community.admins.all %}
+                                    {% if user_role >= 1 %}
                                     <label for="id_from_community" class="small-font margin-left-auto h100pc">
                                         {{ form.from_community.label_tag }}
                                     </label>
