@@ -15,6 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.urls import path, include
 from socialapp import views
 from django.conf.urls.static import static
@@ -38,6 +39,7 @@ urlpatterns = [
     path('search/<str:type>', views.search, name='search'),
     path('communitycreate/', views.communitycreate, name='communitycreate'),
     path('profileupdate/', views.profileupdate, name='profileupdate'),
+    path('<slug:slug>/communityupdate/', views.communityupdate, name='communityupdate'),
     path('<slug:slug>/post<int:id>/', views.postcomments, name='postcomments'),
     path('<slug:slug>/members/', views.communitymembers, name='communitymembers'),
     path('<slug:slug>/admins/', views.communityadmins, name='communityadmins'),

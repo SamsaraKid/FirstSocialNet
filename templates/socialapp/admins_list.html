@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% csrf_token %}
-{% block title %}{{ profile.name }} {{ profile.surname }}{% endblock title %}
+{% block title %}{{ community.title }}{% endblock title %}
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 {% endblock css %}
@@ -26,7 +26,15 @@
                         </tr>
                     </table>
                 </div>
-            <h3 class="margin-bottom15">Управление:</h3>
+
+            <div class="flex-row just-cont-spa-bet"><h3 class="margin-bottom15">Управление:</h3>
+                {% if user_role == 2 %}
+                <a href="{% url 'communityupdate' community.slug %}">
+                    <button class="small-button">Изменить информацию</button>
+                </a>
+            {% endif %}
+            </div>
+
 
 
                     {% for one in page_obj %}
@@ -73,24 +81,24 @@
                     {% endfor %}
 
         {% if page_obj.paginator.num_pages > 1 %}
-        <div class="pagination">
-            <span class="step-links">
-                {% if page_obj.has_previous %}
-                    <a href="?page=1">&laquo; first</a>
-                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-                {% endif %}
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1"><<</a>
+                        <a href="?page={{ page_obj.previous_page_number }}"><</a>
+                    {% endif %}
 
-                <span class="current">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    <span class="current">
+                        Стр. {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">></a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">>></a>
+                    {% endif %}
                 </span>
-
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}">next</a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                {% endif %}
-            </span>
-        </div>
-        {% endif %}
+            </div>
+            {% endif %}
 
         </div>
 

@@ -296,6 +296,7 @@ li{
 
 .link-clean:hover{
     background-color: #3d3d3d;
+    border-radius: 5px;
 }
 
 .link-inline{
@@ -362,5 +363,24 @@ table{
     width: 250px;
 }
 
+/*пагинация*/
+.pagination{
+    width: 100%;
+    margin-bottom: 15px;
+}
+.step-links{
+    display: block;
+    width: max-content;
+    margin: auto;
+    line-height: 22px;
+    vertical-align: center;
+}
+.step-links a{
+    text-decoration: none;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    border: solid #e0e0e0 1px;
+    padding: 0 5px;
+}
 
 

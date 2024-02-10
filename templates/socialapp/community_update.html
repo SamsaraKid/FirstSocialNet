@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ community.title }}{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock css %}
+{% block script %}
+    <script src="{% static 'js/subscribe.js' %}" defer></script>
+    <script src="{% static 'js/postfield.js' %}" defer></script>
+    <script src="{% static 'js/registration.js' %}" defer></script>
+{% endblock script %}
+
+
+{% block main %}
+
+        <div class="main-div">
+
+            <div class="line-under">
+                    <table>
+                        <tr>
+                            <th colspan="2"><a class="link-inline" href="{{ community.get_absolute_url }}"><h3>{{ community.title }}</h3></a>
+                            </th>
+                        </tr>
+                        <tr class="">
+                            <td colspan="2"><h3>{{ community.communityname }}</h3></td>
+                        </tr>
+                    </table>
+                </div>
+
+            <div class="text-center card-simple">
+                <form method="post" novalidate enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <table class="margin-auto margin-bottom15 profile-update-table">
+                        <tr>
+                            <th>{{ form.title.label_tag }}</th>
+                            <td>{{ form.title }}</td>
+                            <td>{{ form.title.errors }}</td>
+                        </tr>
+                        <tr id="id_city_tr">
+                            <th>{{ form.city.label_tag }}</th>
+                            <td>{{ form.city }}</td>
+                            <td>{{ form.city.errors }}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ form.info.label_tag }}</th>
+                            <td>{{ form.info }}</td>
+                            <td>{{ form.info.errors }}</td>
+                        </tr>
+                        <tr>
+                            <th rowspan="2">{{ form.avatar.label_tag }}</th>
+                            <td>
+                                <div class="avatar margin-auto"><img src="{{ community.avatar.url }}" alt="avatar"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="file" name="avatar" accept="image/*" required="" id="id_avatar"></td>
+                        </tr>
+                    </table>
+                    <input type="submit" value="Сохранить">
+                </form>
+            </div>
+
+
+        </div>
+
+
+
+
+{% endblock main %}
+
+{% block footer %}{% endblock footer %}
+

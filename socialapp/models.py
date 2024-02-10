@@ -79,6 +79,11 @@ class Community(models.Model):
     def get_absolute_url(self):
         return reverse('profile', kwargs={'slug': self.slug})
 
+@receiver(pre_delete, sender=Community)
+def avatar_delete(sender, instance, **kwargs):
+    # Pass false so FileField doesn't save the model.
+    instance.avatar.delete(False)
+
 
 class Communityadminstration(models.Model):
     community = models.ForeignKey(Community, on_delete=models.CASCADE)

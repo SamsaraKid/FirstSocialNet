@@ -31,12 +31,13 @@
             <div class="menu-left-div margin-top10">
                 <div class="menu-left">
                     <ul>
+                        {% if user.username %}
                         <li><a class="link-clean" href="{% url 'home' %}">Моя страница</a></li>
                         <li><a class="link-clean" href="{% url 'news' %}">Мои новости</a></li>
                         <li><a class="link-clean" href="{% url 'followpeople' %}">Мои подписки</a></li>
                         <li><a class="link-clean" href="{% url 'communitylist' %}">Мои сообщества</a></li>
-{#                        <li><a class="link-clean" href="">Мои фото</a></li>#}
-                        <li><a class="link-clean" href="{% url 'profileupdate'%}">Мои настройки</a></li> {# user.username #}
+                        <li><a class="link-clean" href="{% url 'profileupdate'%}">Мои настройки</a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

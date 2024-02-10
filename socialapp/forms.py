@@ -92,7 +92,7 @@ class CommunityCreate(forms.ModelForm):
 
     def clean_title(self):
         title = self.cleaned_data.get('title')
-        if Community.objects.filter(slug=title):
+        if Community.objects.filter(title=title):
             raise ValidationError('Выберите другое название')
         else:
             return title
@@ -145,5 +145,32 @@ class ProfileUpdate(forms.Form):
         if 'image' not in avatar.content_type:
             raise forms.ValidationError('Неверный формат фото')
         return avatar
+
+
+class CommunityUpdate(forms.ModelForm):
+    class Meta:
+        model = Community
+        fields = ('title', 'info', 'avatar', 'city')
+    # title = forms.CharField(label='Название', help_text='',
+    #                        widget=forms.TextInput(attrs={'placeholder': 'Название'}))
+    # city = forms.ModelChoiceField(label='Город', queryset=City.objects.all().order_by('name'), required=False)
+    # info = forms.CharField(label='Информация о сообществе', max_length=500, required=False,
+    #                       widget=forms.Textarea(attrs={'placeholder': 'Максимум 500 знаков'}))
+    # avatar = forms.ImageField(label='Аватар', required=False)
+
+    def clean_avatar(self):
+        avatar = self.cleaned_data.get('avatar')
+        if avatar is None:
+            return ''
+        if 'image' not in avatar.content_type:
+            raise forms.ValidationError('Неверный формат фото')
+        return avatar
+
+    # def clean_title(self):
+    #     title = self.cleaned_data.get('title')
+    #     if Community.objects.filter(title=title):
+    #         raise ValidationError('Выберите другое название')
+    #     else:
+    #         return title
 
 

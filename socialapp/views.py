@@ -33,33 +33,6 @@ def index(req):
     else:
         form = AuthenticationForm()
     return render(req, 'index.html', {'form': form})
-    # if req.user.username:
-    #     return HttpResponseRedirect(reverse('profile', args=[req.user.profile.slug]))
-    # else:
-    #     username = 'Guest'
-    # data = {'username': username, 'form': LogInForm()}
-    # return render(req, 'index.html', context=data)
-
-
-# def registration(req):
-#     if req.POST:
-#         userform = UserForm(req.POST)
-#         profileform = ProfileForm(req.POST)
-#         if userform.is_valid() and profileform.is_valid():
-#             user = userform.save()
-#             user.set_password(user.password)
-#             user.save()
-#             login(req, user)
-#             profile = Profile.objects.get(user=user)
-#             profile.name = profileform.cleaned_data.get('name')
-#             profile.surname = profileform.cleaned_data.get('surname')
-#             profile.save()
-#             return HttpResponseRedirect(reverse('profile', args=[req.user.profile.slug]))
-#     else:
-#         userform = UserForm()
-#         profileform = ProfileForm()
-#     data = {'userform': userform, 'profileform': profileform}
-#     return render(req, 'registration/registration.html', context=data)
 
 
 def registration(req):
@@ -226,24 +199,48 @@ def communitydetail(req, slug):
 
 
 def communitymembers(req, slug):
-    form = PeopleSearchForm()
+    search_form = PeopleSearchForm
     community = Community.objects.get(slug=slug)
+    result = community.members.all()
     if req.user.username and Communityadminstration.objects.filter(community=community, user_id=req.user.id):
         user_role = Communityadminstration.objects.filter(community=community,
                                                           user_id=req.user.id).values_list('role', flat=True)[0]
     else:
         user_role = -1
     admins = community.admins.all()
+    query = ''
+    if not req.GET:
+        req.session['search'] = ''
+        form = search_form()
+    else:
+        if req.session['search'] != '':
+            form = search_form(req.session['search'])
+        else:
+            form = search_form()
+    if req.POST:
+        req.session['search'] = req.POST
+        form = search_form(req.session['search'])
+    if req.session['search']:
+        query = req.session['search']['query']
+    if query:
+        if len(query.split(' ')) > 1:
+            query = query.split(' ')
+            result = community.members.filter(Q(profile__name__icontains=query[0], profile__surname__icontains=query[1]) |
+                                          Q(profile__name__icontains=query[1], profile__surname__icontains=query[0]))
+        else:
+            result = community.members.filter(Q(profile__name__icontains=query) |
+                                          Q(profile__surname__icontains=query) |
+                                          Q(profile__secondname__icontains=query) |
+                                          Q(profile__slug__icontains=query))
     # пагинация
-    members = community.members.all()
-    paginator = Paginator(members, 5)
+    paginator = Paginator(result, 5)
     page_number = req.GET.get("page")
     page_obj = paginator.get_page(page_number)
     return render(req, 'socialapp/members_list.html', context={"page_obj": page_obj,
                                                                'community': community,
-                                                               'members': members,
                                                                'user_role': user_role,
-                                                               'admins': admins})
+                                                               'admins': admins,
+                                                               'form': form})
 
 
 def communityadmins(req, slug):
@@ -254,20 +251,6 @@ def communityadmins(req, slug):
     else:
         user_role = -1
     admins = Communityadminstration.objects.filter(community=community)
-    # права на изменение статуса управления
-    #                                                                   .annotate(make_owner=Value(False),
-    #                                                                              make_admin=Value(False),
-    #                                                                              make_moder=Value(False),
-    #                                                                              make_del=Value(False))
-    # for a in admins:
-    #     if user_role == 2 and a.role != 2:
-    #         a.make_owner = True
-    #     if user_role == 2 and a.role == 0:
-    #         a.make_admin = True
-    #     if user_role == 2 and a.role == 1:
-    #         a.make_moder = True
-    #     if user_role > a.role or req.user.id == a.user_id:
-    #         a.make_del = True
     # пагинация
     paginator = Paginator(admins, 5)
     page_number = req.GET.get("page")
@@ -292,7 +275,6 @@ def changeadminstatus(req):
         print(admin)
         if stat >= 0:
             if admin:
-            # admin = Community.objects.get(id=community_id).communityadminstration_set.get(user_id=user_id)
                 admin[0].role = stat
                 admin[0].save()
             else:
@@ -342,6 +324,7 @@ def like(req):
         num_likes = liked_object.count_likes()
         return JsonResponse({'mes': mes, 'link': '', 'num_likes': num_likes})
 
+
 @method_decorator(csrf_exempt, name='dispatch')
 def subscribe(req):
     if req.POST:
@@ -376,89 +359,10 @@ class NewsList(generic.ListView):
     def get_queryset(self):
         qs = super().get_queryset()
         follow = self.request.user.profile.following.values('user_id')
-        return qs.filter(user_id__in=follow) | qs.filter(user_id=self.request.user.id)
+        membership = self.request.user.member.values('id')
+        print(membership)
+        return qs.filter(user_id__in=follow) | qs.filter(user_id=self.request.user.id).exclude(community_id__isnull=False) | qs.filter(community_id__in=membership)
 
-# @login_required()
-# def peoplesearch(req):
-#     profiles = ''
-#     searchresult = False
-#     page_obj = ''
-#     query = ''
-#     if not req.GET:
-#         req.session['search'] = ''
-#         form = PeopleSearchForm()
-#     else:
-#         form = PeopleSearchForm(req.session['search'])
-#     if req.POST:
-#         req.session['search'] = req.POST
-#         form = PeopleSearchForm(req.session['search'])
-#     if req.session['search']:
-#         query = req.session['search']['query']
-#     if query:
-#         if len(query.split(' ')) > 1:
-#             query = query.split(' ')
-#             profiles = Profile.objects.filter(Q(name__icontains=query[0], surname__icontains=query[1]) |
-#                                               Q(name__icontains=query[1], surname__icontains=query[0]))
-#         else:
-#             profiles = Profile.objects.filter(Q(name__icontains=query) |
-#                                               Q(surname__icontains=query) |
-#                                               Q(secondname__icontains=query) |
-#                                               Q(slug__icontains=query))
-#         if profiles:
-#             searchresult = True
-#             # пагинация
-#             paginator = Paginator(profiles, 5)
-#             page_number = req.GET.get("page")
-#             page_obj = paginator.get_page(page_number)
-#     return render(req, 'socialapp/search.html', context={'form': form,
-#                                                          'profiles': profiles,
-#                                                          'searchresult': searchresult,
-#                                                          'page_obj': page_obj,
-#                                                          'query': query,
-#                                                          })
-
-# @login_required()
-# def communitysearch(req):
-#     communities = ''
-#     searchresult = False
-#     page_obj = ''
-#     query = ''
-#     if not req.GET:
-#         req.session['search'] = ''
-#         form = CommunitySearchForm()
-#     else:
-#         form = CommunitySearchForm(req.session['search'])
-#     if req.POST:
-#         req.session['search'] = req.POST
-#         form = CommunitySearchForm(req.session['search'])
-#     if req.session['search']:
-#         query = req.session['search']['query']
-#     if query:
-#         communities = Community.objects.filter(Q(title__icontains=req.POST['query']) |
-#                                                         Q(communityname__icontains=req.POST['query']))
-#         if communities:
-#             searchresult = True
-#             # пагинация
-#             paginator = Paginator(communities, 5)
-#             page_number = req.GET.get("page")
-#             page_obj = paginator.get_page(page_number)
-#     return render(req, 'socialapp/search.html', context={'form': form,
-#                                                          'communities': communities,
-#                                                          'searchresult': searchresult,
-#                                                          'page_obj': page_obj,
-#                                                          'query': query,
-#                                                          })
-    # communities = ''
-    # searchresult = False
-    # form = CommunitySearchForm()
-    # if req.POST:
-    #     form = CommunitySearchForm(req.POST)
-    #     if form.is_valid():
-    #         communities = Community.objects.filter(Q(title__icontains=req.POST['query']) |
-    #                                                 Q(communityname__icontains=req.POST['query']))
-    #         if communities:
-    #             searchresult = True
-    # return render(req, 'socialapp/DELETEcommunities.html', context={'form': form, 'communities': communities})
 
 
 @login_required()
@@ -533,26 +437,6 @@ def communitylist(req):
 
 
 
-# class ProfileUpdate(generic.UpdateView):
-#     model = Profile
-#     form_class = SignUp
-#     template_name = 'socialapp/profile_update.html'
-#     # fields = ['name', 'surname', 'secondname', 'city', 'birthdate', 'avatar', 'bio']
-#     success_url = '/'
-#
-#     def get_object(self):
-#         return self.request.user.profile
-#
-#     def get_initial(self):
-#         initial = super(ProfileUpdate, self).get_initial()
-#         initial['name'] = self.request.user.profile.name
-#         initial['surname'] = self.request.user.profile.surname
-#         initial['secondname'] = self.request.user.profile.secondname
-#         initial['city'] = self.request.user.profile.city
-#         initial['birthdate'] = self.request.user.profile.birthdate
-#         initial['avatar'] = self.request.user.profile.avatar
-#         initial['bio'] = self.request.user.profile.bio
-#         return initial
 
 @login_required()
 def profileupdate(req):
@@ -576,7 +460,6 @@ def profileupdate(req):
             if form.cleaned_data.get('avatar'):
                 profile.avatar.delete()
                 profile.avatar = form.cleaned_data.get('avatar')
-                profile.save()
             profile.save()
         else:
             print(form.errors)
@@ -584,6 +467,34 @@ def profileupdate(req):
                                   'birthdate': profile.birthdate, 'city': profile.city_id, 'bio': profile.bio,
                                   'avatar': profile.avatar})
     return render(req, 'socialapp/profile_update.html', context={'form': form, 'profile': profile})
+
+
+
+@login_required()
+def communityupdate(req, slug):
+    community = Community.objects.get(slug=slug)
+    print(Community.objects.exclude(id=community.id).filter(title=community.title))
+    if req.POST:
+        form = CommunityUpdate(req.POST, req.FILES)
+        if form.is_valid():
+            community.title = form.cleaned_data.get('title')
+            community.info = form.cleaned_data.get('info')
+            community.city = form.cleaned_data.get('city')
+            if form.cleaned_data.get('avatar'):
+                community.avatar.delete()
+                community.avatar = form.cleaned_data.get('avatar')
+            community.save()
+        else:
+            print(form.errors)
+    form = CommunityUpdate(initial={'title': community.title, 'info': community.info,
+                                    'city': community.city_id, 'avatar': community.avatar})
+    if Communityadminstration.objects.filter(community=community, user_id=req.user.id, role=2):
+        return render(req, 'socialapp/community_update.html', context={'form': form, 'community': community})
+    else:
+        return redirect('/')
+
+
+
 
 
 def postcomments(req, slug, id):
