@@ -13,6 +13,7 @@ body{
     background-color: black;
     font-family: "Malgun Gothic";
     color: #e0e0e0;
+    /*font-size: medium;*/
 }
 
 header{
@@ -230,6 +231,8 @@ li{
     height: 100%;
 }
 
+
+
 .flex-row{
     /*margin-bottom: 0;*/
     display: flex;
@@ -383,4 +386,22 @@ table{
     padding: 0 5px;
 }
 
+
+/*@media screen and (min-width: 1000px){*/
+/*    .body{*/
+/*        font-size: medium;*/
+/*    }*/
+/*}*/
+
+/*@media screen and (max-width: 1000px) {*/
+/*    .center-width {*/
+/*        width: 100%;*/
+/*    }*/
+/*}*/
+
+/*@media screen and (max-width: 850px){*/
+/*    .body{*/
+/*        font-size: x-large;*/
+/*    }*/
+/*}*/
 
