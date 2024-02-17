@@ -127,9 +127,11 @@ input[type=file]{
 }
 
 .post-photo{
-    height: 400px;
-    display: block;
     margin: 10px auto;
+    max-height: 450px;
+    width: 100%; /* Ширина изображений */
+    height: 100%; /* Высота изображении */
+    object-fit: contain; /* Вписываем фотографию в область */
 }
 
 
@@ -227,7 +229,7 @@ li{
 }
 
 .center-width{
-    width: 1000px;
+    max-width: 1000px;
     height: 100%;
 }
 
@@ -404,4 +406,91 @@ table{
 /*        font-size: x-large;*/
 /*    }*/
 /*}*/
+
+/*скрывающееся меню*/
+#menuBut{
+    width: 45px;
+    aspect-ratio: 1 / 1;
+    border: none;
+    /*display: none;*/
+    cursor: pointer;
+    /*background-color: transparent;*/
+}
+
+#menuBut svg{
+  fill: #e0e0e0;
+}
+
+#narrowMenuWrap{
+  display: none;
+  height: 0px;
+  overflow: hidden;
+}
+
+#narrowMenu{
+  display: block;
+  /*max-width: 1200px;*/
+  background-color: #1f1f1f;
+  list-style-type: none;
+  margin: 0 auto;
+  padding: 0 20px 10px;
+}
+
+#narrowMenu li{
+    display: block;
+    background-color: #1f1f1f;
+    text-align: center;
+    height: 50px;
+}
+
+#narrowMenu p{
+    margin: auto;
+}
+
+.menuDownAnim{
+  animation: menuDown linear 300ms;
+  animation-fill-mode: forwards;
+}
+
+.menuUpAnim{
+  animation: menuUp linear 300ms;
+  animation-fill-mode: forwards;
+}
+
+@keyframes menuDown{
+  from{
+    height: 0px;
+  }
+  to{
+    height: 260px;
+  }
+}
+
+@keyframes menuUp{
+  from{
+    height: 260px;
+  }
+  to{
+    height: 0px;
+  }
+}
+
+@media screen and (min-width: 1000px){
+    #menuBut{
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1000px){
+    .menu-left-div{
+        display: none;
+    }
+    .main-div{
+        width: 90%;
+        margin: auto;
+    }
+    #narrowMenuWrap{
+        display: block;
+    }
+}
 

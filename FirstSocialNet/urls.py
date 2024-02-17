@@ -34,8 +34,6 @@ urlpatterns = [
     path('follow/', views.FollowPeopleList.as_view(), name='followpeople'),
     path('membership/', views.communitylist, name='communitylist'),
     path('changeadminstatus', views.changeadminstatus, name='changeadminstatus'),
-    # path('peoplesearch/', views.peoplesearch, name='peoplesearch'),
-    # path('communitysearch/', views.communitysearch, name='communitysearch'),
     path('search/<str:type>', views.search, name='search'),
     path('communitycreate/', views.communitycreate, name='communitycreate'),
     path('profileupdate/', views.profileupdate, name='profileupdate'),
@@ -44,7 +42,6 @@ urlpatterns = [
     path('<slug:slug>/members/', views.communitymembers, name='communitymembers'),
     path('<slug:slug>/admins/', views.communityadmins, name='communityadmins'),
     path('<slug:slug>/', views.choisebyslug, name='profile'),
-    # path('<slug:slug>/', views.profiledetail, name='profile'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
