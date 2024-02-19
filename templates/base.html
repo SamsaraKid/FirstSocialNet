@@ -18,9 +18,9 @@
             <ul class="flex-row align-items-center just-cont-spa-bet h100pc">
                 <li><a href="{% url 'home' %}" class="link-clean"><h2>СОЦСЕТЬ</h2></a></li>
                 {% if user.username %}
-                    <li><a href="{% url 'search' 'user' %}" class="link-clean"><p>люди</p></a></li>
-                    <li><a href="{% url 'search' 'community' %}" class="link-clean"><p>сообщества</p></a></li>
-                    <li><a href="{% url 'logout' %}" class="link-clean"><p>выйти</p></a></li>
+                    <li><a href="{% url 'search' 'user' %}" class="link-clean hide-head-links"><p>люди</p></a></li>
+                    <li><a href="{% url 'search' 'community' %}" class="link-clean hide-head-links"><p>сообщества</p></a></li>
+                    <li><a href="{% url 'logout' %}" class="link-clean hide-head-links"><p>выйти</p></a></li>
                     <li id="menuBut">
                         <a class="link-clean">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -40,6 +40,9 @@
                         <li><a class="link-clean" href="{% url 'followpeople' %}"><p>Мои подписки</p></a></li>
                         <li><a class="link-clean" href="{% url 'communitylist' %}"><p>Мои сообщества</p></a></li>
                         <li><a class="link-clean" href="{% url 'profileupdate'%}"><p>Мои настройки</p></a></li>
+                        <li><a href="{% url 'search' 'user' %}" class="link-clean"><p>Люди</p></a></li>
+                        <li><a href="{% url 'search' 'community' %}" class="link-clean"><p>Сообщества</p></a></li>
+                        <li><a href="{% url 'logout' %}" class="link-clean"><p>Выйти</p></a></li>
                 {% endif %}
             </ul>
         </div>

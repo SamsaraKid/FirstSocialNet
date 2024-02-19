@@ -6,7 +6,7 @@ function showHideMenu(){
     if (!menuIsOpen) {
         $('#narrowMenuWrap').removeClass('menuUpAnim')
         $('#narrowMenuWrap').addClass('menuDownAnim')
-        $('#narrowMenuWrap').css('height', '310px')
+        $('#narrowMenuWrap').css('height', '460px')
         menuIsOpen = true
     }   else {
         $('#narrowMenuWrap').removeClass('menuDownAnim')

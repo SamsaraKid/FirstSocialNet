@@ -17,12 +17,12 @@
         <form method="POST" class="margin-bottom15">
             {% csrf_token %}
             {{ form }}
-            <input type="submit" class="margin-auto hidden" value="Искать">
+            <input type="submit" class="margin-auto" value="Искать">
         </form>
 
         {% if type == 'community' and not query %}
         <div class="flex-row just-cont-end margin-bottom15">
-            <a href="{% url 'communitycreate' %}">
+            <a class="create-button" href="{% url 'communitycreate' %}">
                 <button>Создать сообщество</button>
             </a>
         </div>

@@ -13,7 +13,7 @@ body{
     background-color: black;
     font-family: "Malgun Gothic";
     color: #e0e0e0;
-    /*font-size: medium;*/
+    font-size: medium;
 }
 
 header{
@@ -462,13 +462,13 @@ table{
     height: 0px;
   }
   to{
-    height: 260px;
+    height: 460px;
   }
 }
 
 @keyframes menuUp{
   from{
-    height: 260px;
+    height: 460px;
   }
   to{
     height: 0px;
@@ -482,6 +482,9 @@ table{
 }
 
 @media screen and (max-width: 1000px){
+    body{
+        font-size: x-large;
+    }
     .menu-left-div{
         display: none;
     }
@@ -491,6 +494,9 @@ table{
     }
     #narrowMenuWrap{
         display: block;
+    }
+    .hide-head-links{
+        display: none;
     }
 }
 
